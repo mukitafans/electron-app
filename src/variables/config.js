@@ -1,5 +1,5 @@
 const globals = {
-    url_api: "/api/v1/",
+    url_api: "/",
 }
 
 

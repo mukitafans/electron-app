@@ -59,8 +59,8 @@ class Login extends Component {
             <div>
                 {this.state.redirect ? <Redirect to='/' /> :
                     <Layout className="layout" style={{ minHeight: '100vh', background: '#fff' }}>
-                        <Header style={{ background: '#a70054', padding: 0 }} >
-
+                        <Header style={{ background: '#33A8FF', padding: 0 }} >
+                            <h1>LOGIN TOPE DE WAPO</h1>
                         </Header>
                         <Content>
                             <Row style={{ background: '#fff', minHeight: "calc(100vh - 140px)" }} type="flex" justify="space-around" align="middle">
@@ -94,7 +94,7 @@ class Login extends Component {
                                         </Form.Item>
                                         <Form.Item>
                                             <Button type="primary" htmlType="submit" className="login-form-button" >
-                                                Log in
+                                                Entrar
                                         </Button>
                                             {loginFail &&
                                                 <Alert

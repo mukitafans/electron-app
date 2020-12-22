@@ -40,12 +40,12 @@ class Dashboard extends Component {
         return (
             <Layout className="layout" style={{ minHeight: '100vh', background: '#fff' }}>
                 {this.renderRedirect()}
-                <Header style={{ background: '#a70054', padding: 0 }} >
+                <Header style={{ background: '#33A8FF', padding: 0 }} >
                     <div className="logo" >
-                        <img src={logo} alt="Logo" style={{ height: "100%", marginLeft: "10px" }} />
+                        <img src={logo} alt="Logo" style={{ height: "2%", width: "2%", marginLeft: "10px" }} />
                     </div>
 
-                    <div className="logout" style={{ alignItems: "center", marginRight: "40px" }}>
+                    <div className="logout" style={{ alignItems: "center", marginRight: "10px" }}>
                         <Button type="danger" ghost icon="poweroff" size="small" onClick={this.exit}>Log out</Button>
                     </div>
                     <Location>
@@ -59,7 +59,7 @@ class Dashboard extends Component {
 
                 </Header>
                 <Content>
-                    <div style={{ background: '#fff', minHeight: "calc(100vh - 71px)" }}>
+                    <div style={{ background: '#666666', minHeight: "calc(100vh - 71px)" }}>
                         <Map />
                     </div>
                 </Content>

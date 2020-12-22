@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-
+import "antd/dist/antd.css";
 import Dashboard from './layouts/Dashboard.jsx';
 import Login from './layouts/Login.jsx';
 
@@ -12,8 +12,10 @@ const App = () => (
   <div className="App">
     <BrowserRouter>
       <Switch>
-        <Route path="/login" component={Login} />
+        {/* PARA HACER PRUEBAS CAMBIAR EL ORDEN */}
         <Route path="/" component={Dashboard} />
+        <Route path="/login" component={Login} />
+       
       </Switch>
     </BrowserRouter>
   </div>
