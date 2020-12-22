@@ -84,13 +84,28 @@ class MapTodo extends React.Component {
         this.state = {
             //VARIABLES DEL STATE
 
+            latLonClick: null, //lat, lng on map click
+
+            //Map tile selected
+            tile_map: localStorage.getItem("tile_map") || "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
 
             //Start position and zoom
             //position: [43.290863, -1.983663],
             position: [43.34659, -1.78743],
             zoom: 15,
 
+            //Panel right on add Denm or IVI with traces
+            currentEventDenm: null,
+            currentEventIvi: null,
 
+            //traces action when click on map
+            clickMapStatus: null, // null | detection | relevation | traces (for denm)
+
+            //Denm trace first point
+            newTraceDenmStart: null,
+
+            //Cursor for add traces
+            customCur: ""
 
 
         };
@@ -109,6 +124,11 @@ class MapTodo extends React.Component {
             .then(res => (res.status === 200) && this.setState({ poi: res.data.poi, denm: res.data.denm, ivi: res.data.ivi }));
     }
 
+    //Change Tile map in moment and save in local storage
+    handleChangeTile = value => {
+        this.setState({ tile_map: value });
+        localStorage.setItem("tile_map", value);
+    };
     //More zoom
     zoomIn = () => {
         let lastZoom = this.state.zoom;
@@ -158,6 +178,36 @@ class MapTodo extends React.Component {
                     //className={customCur}
                     ref={map => this.map = map}
                 >
+
+                    <ZoomControl position="topright" />
+                    <TileLayer
+                        url={tile_map}
+                        attribution={map_tiles[1].value === tile_map ? map_tiles[1].attribution : "&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"}
+                    />
+
+                    {/*To select map tiles*/}
+                    <Control position="bottomright">
+                        <Select size="small" defaultValue={getLabelOfTile(tile_map)} onChange={this.handleChangeTile}>
+                            {map_tiles.map((obj, i) => <Option key={"map_tile_" + i} value={obj.value}>{obj.label}</Option>)}
+                        </Select>
+                    </Control>
+                    {/*To select map tiles*/}
+                    <Control position="topleft">
+                        <Geolocation
+                            render={({
+                                position: { coords: { latitude, longitude } = {} } = {},
+                                //error,
+                                getCurrentPosition
+                            }) => {
+                                if (latitude && longitude && position[0] !== latitude && position[1] !== longitude) this.setState({ position: [latitude, longitude] })
+                                //this.map.setView(new L.LatLng(40.737, -73.923), 8);
+                                return <Button shape="circle" ghost onClick={() => getCurrentPosition()} ><FontAwesomeIcon icon={faMapMarkerAlt} /></Button>
+                            }
+                            }
+                        />
+                    </Control>
+
+
                     </Map>
             </Col>
         );
