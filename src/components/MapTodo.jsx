@@ -19,7 +19,7 @@ import ZoomOut from 'leaflet-contextmenu/examples/images/zoom-out.png'
 import PointInPolygon from 'point-in-polygon';
 
 //Antd 
-import { Col, Select, Button } from 'antd';
+import { Col, Select, Button, Radio, Drawer } from 'antd';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons'
@@ -30,6 +30,8 @@ import { globals } from "../variables/config.js";
 
 
 const { Option } = Select;
+
+const RadioGroup = Radio.Group;
 
 //Tiles for map
 const map_tiles = [
@@ -105,7 +107,11 @@ class MapTodo extends React.Component {
             newTraceDenmStart: null,
 
             //Cursor for add traces
-            customCur: ""
+            customCur: "",
+
+            //Menu Desplazable
+            visible: false , 
+            placement: 'left' 
 
 
         };
@@ -143,11 +149,56 @@ class MapTodo extends React.Component {
 
 
 
+    //FUNCIONES MENU DESPLEGABLE
+    showDrawer = () => {
+        this.setState({
+          visible: true,
+        });
+      };
+    
+    onClose = () => {
+        this.setState({
+            visible: false,
+        });
+    };
+
+    onChange = e => {
+        this.setState({
+            placement: e.target.value,
+        });
+    };
+
+
     //RENDER PARA LO VISUAL
     render() {
         const { tile_map, position, zoom } = this.state;
         return (
             <Col span={24} style={{ padding: 0 }}>
+                <div>
+                    <RadioGroup
+                    style={{ marginRight: 8 }}
+                    defaultValue={this.state.placement}
+                    onChange={this.onChange}
+                    >
+                    
+                    <Radio value="left" display="none">left</Radio>
+                    </RadioGroup>
+                    <Button type="primary" onClick={this.showDrawer}>
+                    Open
+                    </Button>
+
+                    <Drawer
+                    title="Basic Drawer"
+                    placement={this.state.placement}
+                    closable={false}
+                    onClose={this.onClose}
+                    visible={this.state.visible}
+                    >
+                    <p>Some contents...</p>
+                    <p>Some contents...</p>
+                    <p>Some contents...</p>
+                    </Drawer>
+                </div>
                 {/*Map object*/}
                 <Map
                     center={position}
