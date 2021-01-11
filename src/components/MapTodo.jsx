@@ -188,26 +188,36 @@ class MapTodo extends React.Component {
                     </Button>
 
                     <Drawer
-                    title="Basic Drawer"
+                    title='Opciones'
                     placement={this.state.placement}
                     closable={false}
                     onClose={this.onClose}
                     visible={this.state.visible}
                     >
-                    <p>Some contents...</p>
-                    <p>Some contents...</p>
-                    <p>Some contents...</p>
+                    <Button style={{padding:'0px'}} type="primary" block>
+                    Lista de rutas
+                    </Button>
+                    <br></br>
+                    <Button type="primary" block>
+                    Perfiles de usuario
+                    </Button>
+                    <Button type="primary" block>
+                    Preguntas de las rutas
+                    </Button>
+                    <Button type="danger" block>
+                    Logout
+                    </Button>
                     </Drawer>
                 </div>
                 {/*Map object*/}
                 <Map
                     center={position}
                     zoom={zoom}
-                    style={{ height: 'calc(100vh - 70px)' }}
+                    style={{  height: 'calc(97vh - 70px)', width: 'calc(165vh - 70px)'   }}
                     onClick={this.handleNewZone}
                     zoomControl={false}
                     contextmenu={true}
-                    contextmenuWidth={250}
+                    contextmenuWidth={450}
                     maxZoom={20}
                     //Menu on right click
                     contextmenuItems={[

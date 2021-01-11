@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Map from '../views/Map.jsx';
 //import logoCmobile from './../../assets/img/c_mobile.png';
 import logo from '../assets/img/logo.png';
-
+import menuIcon from '../assets/img/Menuicon.png';
 import { Location } from '@reach/router'
 import { Redirect } from 'react-router-dom';
 
@@ -41,6 +41,9 @@ class Dashboard extends Component {
             <Layout className="layout" style={{ minHeight: '100vh', background: '#fff' }}>
                 {this.renderRedirect()}
                 <Header style={{ background: '#33A8FF', padding: 0 }} >
+
+                    <Button style={{width:'50px', position: 'fixed', marginLeft:'-49%', marginTop: '18px'}} block><img src={menuIcon} style={{ height: "50%", width: "100%"}} /></Button>
+
                     <div className="logo" >
                         <img src={logo} alt="Logo" style={{ height: "2%", width: "2%", marginLeft: "10px" }} />
                     </div>
