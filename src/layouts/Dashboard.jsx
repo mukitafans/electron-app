@@ -5,9 +5,9 @@ import Map from '../views/Map.jsx';
 import logo from '../assets/img/logo.png';
 import menuIcon from '../assets/img/Menuicon.png';
 import { Location } from '@reach/router'
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 
-import { Layout, Menu, Button } from 'antd';
+import { Layout, Menu, Button, Drawer } from 'antd';
 
 import { authenticationService } from '../services/authentication.service.js';
 
@@ -17,7 +17,8 @@ class Dashboard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            logged: true
+            logged: true,
+            visible: false
         };
     }
 
@@ -36,13 +37,59 @@ class Dashboard extends Component {
         this.setState({ logged: authenticationService.loginValid() })
     }
 
+
+    //funciones para el drawer
+    showDrawer = () => {
+        this.setState({
+          visible: true,
+        });
+      };
+    
+      onClose = () => {
+        this.setState({
+          visible: false,
+        });
+      };
+
+
+
     render() {
         return (
             <Layout className="layout" style={{ minHeight: '100vh', background: '#fff' }}>
                 {this.renderRedirect()}
                 <Header style={{ background: '#33A8FF', padding: 0 }} >
 
-                    <Button style={{width:'50px', position: 'fixed', marginLeft:'-49%', marginTop: '18px'}} block><img src={menuIcon} style={{ height: "50%", width: "100%"}} /></Button>
+                    {/* MENU DRAWER (desplegable) */}
+                <div>    
+                    <Drawer
+                    title="Opciones"
+                    placement="left"
+                    closable={false}
+                    onClose={this.onClose}
+                    visible={this.state.visible}
+                    >
+                    <Button style={{padding:'0px'}} type="primary" block>
+                        <Link to="/">Lista de rutas</Link>       
+                    </Button>
+                    <br></br>
+                    <Button style={{marginTop:'10px'}}  type="primary" block>
+                    
+                        <Link to="/login">Perfiles de usuario</Link>                    
+                    </Button>
+                    <Button style={{marginTop:'10px'}} type="primary" block>
+                    Preguntas de las rutas
+                    </Button>
+                    <Button style={{marginTop:'10px'}} type="danger" block>
+                    Logout
+                    </Button>
+                    </Drawer>
+                </div>
+
+
+
+
+
+                    <Button onClick={this.showDrawer} style={{width:'50px', position: 'fixed', marginLeft:'-49%', marginTop: '18px'}} block><img src={menuIcon} style={{ height: "50%", width: "100%"}} /></Button>
 
                     <div className="logo" >
                         <img src={logo} alt="Logo" style={{ height: "2%", width: "2%", marginLeft: "10px" }} />

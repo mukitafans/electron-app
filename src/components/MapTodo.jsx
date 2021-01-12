@@ -28,6 +28,9 @@ import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons'
 import { globals } from "../variables/config.js";
 
 
+//Componentes
+import Chat from "./Chat.jsx";
+
 
 const { Option } = Select;
 
@@ -76,9 +79,6 @@ const map_tiles = [
 
 //Function to select Tile
 const getLabelOfTile = (value) => map_tiles.find(obj => obj.value === value).label || "Open Street Maps";
-
-
-
 
 class MapTodo extends React.Component {
     constructor(props) {
@@ -174,46 +174,12 @@ class MapTodo extends React.Component {
         const { tile_map, position, zoom } = this.state;
         return (
             <Col span={24} style={{ padding: 0 }}>
-                <div>
-                    <RadioGroup
-                    style={{ marginRight: 8 }}
-                    defaultValue={this.state.placement}
-                    onChange={this.onChange}
-                    >
-                    
-                    <Radio value="left" display="none">left</Radio>
-                    </RadioGroup>
-                    <Button type="primary" onClick={this.showDrawer}>
-                    Open
-                    </Button>
-
-                    <Drawer
-                    title='Opciones'
-                    placement={this.state.placement}
-                    closable={false}
-                    onClose={this.onClose}
-                    visible={this.state.visible}
-                    >
-                    <Button style={{padding:'0px'}} type="primary" block>
-                    Lista de rutas
-                    </Button>
-                    <br></br>
-                    <Button type="primary" block>
-                    Perfiles de usuario
-                    </Button>
-                    <Button type="primary" block>
-                    Preguntas de las rutas
-                    </Button>
-                    <Button type="danger" block>
-                    Logout
-                    </Button>
-                    </Drawer>
-                </div>
+                
                 {/*Map object*/}
                 <Map
                     center={position}
                     zoom={zoom}
-                    style={{  height: 'calc(97vh - 70px)', width: 'calc(165vh - 70px)'   }}
+                    style={{  height: 'calc(101vh - 70px)' }}
                     onClick={this.handleNewZone}
                     zoomControl={false}
                     contextmenu={true}
@@ -247,7 +213,7 @@ class MapTodo extends React.Component {
                     />
 
                     {/*To select map tiles*/}
-                    <Control position="bottomright">
+                    <Control position="bottomleft" style={{position: 'fixed', marginLeft:'49%'}}>
                         <Select size="small" defaultValue={getLabelOfTile(tile_map)} onChange={this.handleChangeTile}>
                             {map_tiles.map((obj, i) => <Option key={"map_tile_" + i} value={obj.value}>{obj.label}</Option>)}
                         </Select>
@@ -266,6 +232,11 @@ class MapTodo extends React.Component {
                             }
                             }
                         />
+                    </Control>
+
+                    <Control>
+                        <Chat>
+                        </Chat>
                     </Control>
 
 

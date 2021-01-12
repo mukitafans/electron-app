@@ -5,10 +5,7 @@ import { Widget, addResponseMessage, addLinkSnippet, addUserMessage } from 'reac
 
 import 'react-chat-widget/lib/styles.css';
 
-import logo from './logo.svg';
-
-
-
+import logo from '../assets/img/logo.png';
 
 
 class Chat extends Component {
@@ -20,7 +17,12 @@ class Chat extends Component {
     }
 
     componentDidMount() {
-        //this.setState({ logged: authenticationService.loginValid() })
+        addResponseMessage("Welcome to this awesome chat!");
+    }
+
+    handleNewUserMessage = (newMessage) => {
+        console.log(`New message incomig! ${newMessage}`);
+    // Now send the message throught the backend API
     }
 
 

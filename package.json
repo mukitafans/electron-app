@@ -15,6 +15,7 @@
     "axios": "^0.19.2",
     "babel-plugin-import": "^1.13.0",
     "customize-cra": "^0.8.0",
+    "electron-is-dev": "^1.2.0",
     "express": "^4.17.1",
     "history": "^4.10.1",
     "http-proxy-middleware": "^0.20.0",
@@ -31,10 +32,10 @@
     "moment": "^2.27.0",
     "point-in-polygon": "^1.0.1",
     "prop-types": "^15.7.2",
-    "electron-is-dev": "^1.2.0",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1",
     "react-app-rewired": "^2.1.6",
+    "react-chat-widget": "^3.0.5",
+    "react-dom": "^16.13.1",
     "react-geolocation": "^1.0.4",
     "react-highlight-words": "^0.16.0",
     "react-icons": "^3.10.0",
@@ -45,8 +46,8 @@
     "react-leaflet-sidetabs": "^1.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
-    "web-vitals": "^0.2.4",
-    "rxjs": "^6.5.5"
+    "rxjs": "^6.5.5",
+    "web-vitals": "^0.2.4"
   },
   "scripts": {
     "start": "react-scripts start",
