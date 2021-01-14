@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 
 import { Form, Icon, Input, Button, Layout, Row, Col, Alert } from 'antd';
 import { authenticationService } from '../services/authentication.service.js';
@@ -61,6 +61,9 @@ class Login extends Component {
                     <Layout className="layout" style={{ minHeight: '100vh', background: '#fff' }}>
                         <Header style={{ background: '#33A8FF', padding: 0 }} >
                             <h1>LOGIN TOPE DE WAPO</h1>
+                            <Button style={{padding:'0px'}} type="primary" block>
+                        <Link to="/usuarios">Lista de rutas</Link>       
+                    </Button>
                         </Header>
                         <Content>
                             <Row style={{ background: '#fff', minHeight: "calc(100vh - 140px)" }} type="flex" justify="space-around" align="middle">

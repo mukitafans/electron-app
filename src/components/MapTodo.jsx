@@ -1,6 +1,7 @@
 import React from "react";
 //To request HTTP
 import axios from "axios";
+import { Redirect, Link } from 'react-router-dom';
 
 //Leaflet
 import { Map, TileLayer, ZoomControl, Polyline, Marker } from 'react-leaflet'
@@ -174,7 +175,9 @@ class MapTodo extends React.Component {
         const { tile_map, position, zoom } = this.state;
         return (
             <Col span={24} style={{ padding: 0 }}>
-                
+                <Button style={{padding:'0px'}} type="primary" block>
+                        <Link to="/login">Lista de rutas</Link>       
+                    </Button>
                 {/*Map object*/}
                 <Map
                     center={position}
@@ -238,7 +241,7 @@ class MapTodo extends React.Component {
                         <Chat>
                         </Chat>
                     </Control>
-
+                    
 
                     </Map>
             </Col>

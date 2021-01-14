@@ -1,17 +1,36 @@
 import React, { Component } from 'react';
 
 import Map from '../views/Map.jsx';
+import Localizaciones from '../components/CrudLocalizaciones.jsx';
 //import logoCmobile from './../../assets/img/c_mobile.png';
 import logo from '../assets/img/logo.png';
 import menuIcon from '../assets/img/Menuicon.png';
-import { Location } from '@reach/router'
-import { Redirect, Link } from 'react-router-dom';
+import { Location, redirectTo } from '@reach/router'
+import {BrowserRouter as Router, Redirect, Link, Switch, Route } from 'react-router-dom';
 
 import { Layout, Menu, Button, Drawer } from 'antd';
 
 import { authenticationService } from '../services/authentication.service.js';
+//import { Router } from 'express';
 
 const { Header, Content } = Layout;
+
+const routes = [
+    {
+      path: "/",
+      exact: true,
+      main: () => <Map/>
+    },
+    {
+      path: "/localizaciones",
+      main: () => <Localizaciones/>
+    },
+    {
+      path: "/shoelaces",
+      main: () => <h2>Shoelaces</h2>
+    }
+  ];
+
 
 class Dashboard extends Component {
     constructor(props) {
@@ -23,13 +42,13 @@ class Dashboard extends Component {
     }
 
     componentDidMount() {
-        this.setState({ logged: authenticationService.loginValid() })
+       // this.setState({ logged: authenticationService.loginValid() })
     }
 
     renderRedirect = () => {
-        if (!this.state.logged) {
-            return <Redirect to='/login' />
-        }
+       /* if (!this.state.logged) {
+            return <Redirect to='/' />
+        }*/
     }
 
     exit = () => {
@@ -55,12 +74,9 @@ class Dashboard extends Component {
 
     render() {
         return (
-            <Layout className="layout" style={{ minHeight: '100vh', background: '#fff' }}>
-                {this.renderRedirect()}
-                <Header style={{ background: '#33A8FF', padding: 0 }} >
-
-                    {/* MENU DRAWER (desplegable) */}
-                <div>    
+            <Router>
+                   {/* MENU DRAWER (desplegable) */}
+                   <div>    
                     <Drawer
                     title="Opciones"
                     placement="left"
@@ -68,35 +84,39 @@ class Dashboard extends Component {
                     onClose={this.onClose}
                     visible={this.state.visible}
                     >
-                    <Button style={{padding:'0px'}} type="primary" block>
-                        <Link to="/">Lista de rutas</Link>       
-                    </Button>
-                    <br></br>
-                    <Button style={{marginTop:'10px'}}  type="primary" block>
-                    
-                        <Link to="/login">Perfiles de usuario</Link>                    
-                    </Button>
-                    <Button style={{marginTop:'10px'}} type="primary" block>
-                    Preguntas de las rutas
-                    </Button>
-                    <Button style={{marginTop:'10px'}} type="danger" block>
-                    Logout
-                    </Button>
+                        <Button style={{padding:'0px'}} type="primary" block>
+                            <Link to="/">Mapa de rutas</Link>       
+                        </Button>
+                        <Button style={{marginTop:'10px'}} type="primary" block>
+                            <Link to="/localizaciones">Lista de rutas</Link>       
+                        </Button>
+                        <Button style={{marginTop:'10px'}}  type="primary" block>
+                            <Link to="/usuarios">Perfiles de usuario</Link>                    
+                        </Button>
+                        <Button style={{marginTop:'10px'}} type="primary" block>
+                            <Link to="/usuarios">Preguntas de las rutas</Link>                    
+                        </Button>
+                        <Button style={{marginTop:'10px'}} type="danger" block onClick={this.exit}>
+                        Logout
+                        </Button>
+                   
                     </Drawer>
                 </div>
+                        
 
+                <Layout className="layout" style={{ minHeight: '1vh', background: '#fff' }}>
+                {this.renderRedirect()}
+                <Header style={{ background: '#33A8FF', padding: 0 }} >
 
-
-
-
+                 
                     <Button onClick={this.showDrawer} style={{width:'50px', position: 'fixed', marginLeft:'-49%', marginTop: '18px'}} block><img src={menuIcon} style={{ height: "50%", width: "100%"}} /></Button>
 
                     <div className="logo" >
                         <img src={logo} alt="Logo" style={{ height: "2%", width: "2%", marginLeft: "10px" }} />
                     </div>
-
+                    
                     <div className="logout" style={{ alignItems: "center", marginRight: "10px" }}>
-                        <Button type="danger" ghost icon="poweroff" size="small" onClick={this.exit}>Log out</Button>
+                        {/*<Button type="danger" ghost icon="poweroff" size="small" onClick={this.exit}>Log out</Button> */}
                     </div>
                     <Location>
                         {props => {
@@ -108,13 +128,30 @@ class Dashboard extends Component {
                     </Location>
 
                 </Header>
-                <Content>
-                    <div style={{ background: '#666666', minHeight: "calc(100vh - 71px)" }}>
-                        <Map />
-                    </div>
-                </Content>
+                
                 {/*<Footer style={{ textAlign: 'center' }}>C-Mobile ©2019 Created by CEIT</Footer>*/}
             </Layout>
+                <Content>
+                    <div style={{ background: '#666666', minHeight: "calc(100vh - 71px)" }}>
+                        {/*<Map />*/}
+                        <Switch>
+                            {routes.map((route, index) => (
+                            // Render more <Route>s with the same paths as
+                            // above, but different components this time.
+                            <Route
+                                key={index}
+                                path={route.path}
+                                exact={route.exact}
+                                children={<route.main />}
+                            />
+                            ))}
+                        </Switch>
+                 
+                    </div>
+                </Content>
+            </Router>
+            
+            
         );
     }
 }
