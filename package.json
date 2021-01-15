@@ -12,7 +12,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "antd": "^3.26.18",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "babel-plugin-import": "^1.13.0",
     "customize-cra": "^0.8.0",
     "electron-is-dev": "^1.2.0",
@@ -46,6 +46,7 @@
     "react-leaflet-sidetabs": "^1.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
+    "reqwest": "^2.0.5",
     "rxjs": "^6.5.5",
     "web-vitals": "^0.2.4"
   },
@@ -78,6 +79,6 @@
     "concurrently": "^5.3.0",
     "electron": "^11.1.0",
     "electron-builder": "^22.9.1",
-    "wait-on": "^5.2.0"
+    "wait-on": "^5.2.1"
   }
 }

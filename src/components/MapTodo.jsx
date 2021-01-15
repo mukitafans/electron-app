@@ -31,6 +31,8 @@ import { globals } from "../variables/config.js";
 
 //Componentes
 import Chat from "./Chat.jsx";
+import MarkerIvi from "./Markers/Ivi.jsx";
+import NewIvi from "./Panels/PanelIvi.jsx";
 
 
 const { Option } = Select;
@@ -86,7 +88,7 @@ class MapTodo extends React.Component {
         super(props);
         this.state = {
             //VARIABLES DEL STATE
-
+            ivi: [],
             latLonClick: null, //lat, lng on map click
 
             //Map tile selected
@@ -112,7 +114,10 @@ class MapTodo extends React.Component {
 
             //Menu Desplazable
             visible: false , 
-            placement: 'left' 
+            placement: 'left', 
+
+
+            visibleIvi: false
 
 
         };
@@ -169,15 +174,159 @@ class MapTodo extends React.Component {
         });
     };
 
+    centerMap = (e) => this.setState({ position: [e.latlng.lat, e.latlng.lng] });
+
+    //PARA BORRAR PUNTOS + RUTAS
+     //Send request to delete Ivi
+     handleDeleteIvi = (id) => {
+        let objUser = JSON.parse(localStorage.getItem("currentUser"));
+        let token = (objUser && objUser.token) ? objUser.token : "";
+
+        axios.post(globals.url_api + 'ivi_del',
+            { id: id },
+            { headers: { 'x-access-token': token } },
+        )
+            .then(res => {
+                if (res.status === 200) {
+                    const { ivi } = this.state;
+                    let newMarkers = ivi.filter(obj => obj.id !== id);
+                    this.map.leafletElement.closePopup();
+                    this.setState({ ivi: newMarkers });
+                }
+            })
+            .catch(err => console.log("error", err));
+    };
+
+    //GUARDAR FORM 
+    //Save form IVI
+    saveFormRefIvi = formRef => this.formRefIvi = formRef;
+
+    //Abrir formulario para añadir ruta
+    openIviModal = (e) => this.setState({ visibleIvi: true, latLonClick: e.latlng });
+   
+
+    //On add ivi in Zones panel
+    handleCreateIviWithZones = () => {
+        let { currentEventIvi, ivi } = this.state;
+        if (!currentEventIvi) return;
+
+        let objUser = JSON.parse(localStorage.getItem("currentUser"));
+        let token = (objUser && objUser.token) ? objUser.token : "";
+
+        axios.post(globals.url_api + 'ivi', {
+            spm: currentEventIvi.spm,
+            lat: currentEventIvi.latitude,
+            lon: currentEventIvi.long,
+            valid_from: currentEventIvi.valid_from,
+            valid_to: currentEventIvi.valid_to,
+            cause_code: currentEventIvi.cause_code,
+            relevance_points: JSON.stringify(currentEventIvi.relevance_zones),
+            detection_points: JSON.stringify(currentEventIvi.detection_zones)
+        }, {
+            headers: { 'x-access-token': token },
+        })
+            .then(res => {
+                if (res.status === 201) {
+                    ivi.push(res.data.ivi);
+                    this.setState({ ivi, visibleDenm: false, clickMapStatus: null, newTraceDenmStart: null, currentEventIvi: null, customCur: "" });
+                }
+            })
+            .catch(err => console.log("error", err));
+    };
+
+    //On cancel in Zones panel
+    handleCancelWithZones = () => this.setState({ visibleDenm: false, visibleDenm2: false, visibleIvi: false, visibleIvi2: false,clickMapStatus: null, newTraceDenmStart: null, currentEventDenm: null, currentEventIvi: null, customCur: "" });
+
+    //On accept denm modal (Send request or open add traces mode)
+    handleCreateIvi = () => {
+        const { form } = this.formRefIvi.props;
+        form.validateFields((err, values) => {
+            if (err) {
+                return;
+            }
+
+            //Get valid dates to send 
+            let valid_from = values.dates[0].utcOffset(0);
+            valid_from.set({ hour: 0, minute: 0, second: 0 });
+
+            let valid_to = values.dates[1].utcOffset(0);
+            valid_to.set({ hour: 23, minute: 59, second: 59 });
+
+            const { ivi, latLonClick } = this.state;
+
+            let objUser = JSON.parse(localStorage.getItem("currentUser"));
+            let token = (objUser && objUser.token) ? objUser.token : "";
+
+            //If not need traces
+            if (!values.traces) {
+                axios.post(globals.url_api + 'ivi', {
+                    spm: values.speed_limit,
+                    lat: latLonClick.lat,
+                    lon: latLonClick.lng,
+                    valid_from: valid_from.unix(),
+                    valid_to: valid_to.unix()
+                }, {
+                    headers: { 'x-access-token': token },
+                })
+                    .then(res => {
+                        if (res.status === 201) {
+                            ivi.push(res.data.ivi);
+                            this.setState({ ivi, visibleIvi: false });
+                            form.resetFields();
+                        }
+                    })
+                    .catch(err => console.log("error", err));
+            } else {
+                this.setState({
+                    currentEventIvi: {
+                        spm: values.speed_limit,
+                        valid_from: valid_from.unix(),
+                        valid_to: valid_to.unix(),
+                        latitude: latLonClick.lat,
+                        long: latLonClick.lng,
+                        detection_zones: [],
+                        relevance_zones: []
+                    },
+                    visibleIvi: false,
+                    clickMapStatus: "detection",
+                    customCur: "add-detection-zone-cur"
+                })
+            }
+
+            //Reset form
+            form.resetFields();
+        });
+    };
+
+    //Change IVI mouse
+    changeZoneType = (clickMapStatus) => this.setState({ clickMapStatus, customCur: 'add-' + clickMapStatus + '-zone-cur' });
+
+    //remove ivi detection none
+    removeZoneDetection = (i) => {
+        let currentEventIvi = this.state.currentEventIvi;
+        if (currentEventIvi && currentEventIvi.detection_zones && currentEventIvi.detection_zones[i]) currentEventIvi.detection_zones.splice(i, 1);
+        this.setState({ currentEventIvi });
+    }
 
     //RENDER PARA LO VISUAL
     render() {
-        const { tile_map, position, zoom } = this.state;
+        const { tile_map, position, zoom, ivi, visibleIvi } = this.state;
         return (
             <Col span={24} style={{ padding: 0 }}>
                 <Button style={{padding:'0px'}} type="primary" block>
                         <Link to="/login">Lista de rutas</Link>       
                     </Button>
+
+
+                {/*Ivi modal*/}
+                <NewIvi
+                    wrappedComponentRef={this.saveFormRefIvi}
+                    visible={visibleIvi}
+                    onCancel={this.handleCancelIvi}
+                    onCreate={this.handleCreateIvi}
+                />
+
+
                 {/*Map object*/}
                 <Map
                     center={position}
@@ -194,6 +343,8 @@ class MapTodo extends React.Component {
                         {
                             text: 'Prueba',
                             icon: ZoomControl,
+                            callback: (e) => this.openIviModal(e),
+                            hideOnSelect: true
                             
                         },'-', {
                             text: 'Zoom in',
@@ -242,6 +393,7 @@ class MapTodo extends React.Component {
                         </Chat>
                     </Control>
                     
+                    {ivi.map((objIvi, id) => <MarkerIvi objIvi={objIvi} key={`marker-ivi-${id}`} handleDelete={() => this.handleDeleteIvi(objIvi.id)} />)}
 
                     </Map>
             </Col>
