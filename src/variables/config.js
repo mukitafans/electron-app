@@ -1,5 +1,5 @@
 const globals = {
-    url_api: "/",
+    url_api: "/localizaciones/all",
 }
 
 

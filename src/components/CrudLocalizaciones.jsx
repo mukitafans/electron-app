@@ -12,17 +12,32 @@ import { authenticationService } from '../services/authentication.service.js';
 
 import reqwest from 'reqwest';
 
+
+const datosArray = [
+
+
+] 
+
 const columns = [
     {
       title: 'Localizacion',
-      dataIndex: 'name',
-      sorter: true,
-      render: name => `${name.first} ${name.last}`,
-      width: '20%',
+      //dataIndex: 'nombre',
+      //sorter: true,
+      //render: nombre => `${nombre}`,
+      //width: '20%',
+      //key: 'nombre'
     },
+    /*
+    title: 'Localizacion',
+    dataIndex: 'name',
+    sorter: true,
+    render: name => `${name.first} ${name.last}`,
+    width: '20%',
+  },*/
     {
-        title: 'ID ruta',
-        dataIndex: 'id_ruta',
+        title: 'Nombre',
+        dataIndex: 'nombre2',
+        //key: 'nombre'
     },
     {
         title: 'Lat',
@@ -30,12 +45,12 @@ const columns = [
     },
     {
         title: 'Lon',
-        dataIndex: 'lot',
+        dataIndex: 'log',
     },
     {
       title: 'Ciudad',
-      dataIndex: 'ciudad',
-      filters: [{ text: 'Irun', value: 'irun' }, { text: 'Donostia', value: 'Donostia' }],
+      dataIndex: 'nombre',
+      filters: [{ text: 'Irun', value: 'Irun' }, { text: 'Donostia', value: 'Donostia' }],
       width: '20%',
     },
     {
@@ -44,7 +59,8 @@ const columns = [
     },
     {
         title: 'Nombre de la ruta',
-        dataIndex: 'nombre_ruta',
+       // dataIndex: 'listaRutas',
+       // render: listaRutas => `${listaRutas.nombre}`,
     },
     {
         title: 'Transporte',
@@ -97,13 +113,13 @@ class CrudLocalizaciones extends Component{
     };
 
     fetch = (params = {}) => {
-        console.log('params:', params);
+        console.log('datos:', params);
         this.setState({ loading: true });
         reqwest({
-          url: 'https://randomuser.me/api',
+          url: 'http://137.116.219.96:80/localizaciones/all',
           method: 'get',
           data: {
-            results: 20,
+            [{}]: 20,
             ...params,
           },
           type: 'json',
@@ -112,9 +128,10 @@ class CrudLocalizaciones extends Component{
           // Read total count from server
           // pagination.total = data.totalCount;
           pagination.total = 200;
+          console.log(data);
           this.setState({
             loading: false,
-            data: data.results,
+            data: data,
             pagination,
           });
         });
@@ -123,9 +140,9 @@ class CrudLocalizaciones extends Component{
         return(
             <Table
             columns={columns}
-            rowKey={record => record.login.uuid}
+            //rowKey={record => record.login.uuid}
             dataSource={this.state.data}
-            pagination={this.state.pagination}
+           // pagination={this.state.pagination}
             loading={this.state.loading}
             onChange={this.handleTableChange}
           />

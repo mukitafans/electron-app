@@ -18,23 +18,26 @@ const { Header, Content } = Layout;
 
 const routes = [
     {
-        path: "/login",
-        main: () => <Login/>
-      },
-    {
       path: "/",
       exact: true,
-      main: () => <Map/>
+      main: () => <Login/>
     },
     {
       path: "/localizaciones",
       main: () => <Localizaciones/>
-    }
-    
+    },
+    {
+      path: "/login",
+      main: () => <Login/>
+    },
+    {
+        path: "/todo",
+        main: () => <Map/>
+      }
   ];
 
 
-class Dashboard extends Component {
+class DashboardLogin extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -44,25 +47,19 @@ class Dashboard extends Component {
     }
 
     componentDidMount() {
-        this.setState({ logged: authenticationService.loginValid() })
+       // this.setState({ logged: authenticationService.loginValid() })
     }
 
     renderRedirect = () => {
-        if (!this.state.logged) {
-            return <Redirect to='/login' />
-        }
+       /* if (!this.state.logged) {
+            return <Redirect to='/' />
+        }*/
     }
 
     exit = () => {
         authenticationService.logout();
         this.setState({ logged: authenticationService.loginValid() })
     }
-    signOut = () => {
-        localStorage.removeItem("token");
-        this.setState({
-          islogout: true
-        });
-      };
 
 
     //funciones para el drawer
@@ -82,50 +79,18 @@ class Dashboard extends Component {
 
     render() {
         return (
-            
             <Router>
-                <Layout className="layout" style={{ minHeight: '1vh', background: '#fff' }}>
-
                    {/* MENU DRAWER (desplegable) */}
                    <div>    
-                    <Drawer
-                    title="Opciones"
-                    placement="left"
-                    closable={false}
-                    onClose={this.onClose}
-                    visible={this.state.visible}
-                    >
-                        <Button style={{padding:'0px'}} type="primary" block>
-                            <Link to="/login">login pruebas</Link>       
-                        </Button>
-                        <Button style={{padding:'0px'}} type="primary" block>
-                            <Link to="/">Mapa de rutas</Link>       
-                        </Button>
-                        <Button style={{marginTop:'10px'}} type="primary" block>
-                            <Link to="/localizaciones">Lista de rutas</Link>       
-                        </Button>
-                        <Button style={{marginTop:'10px'}}  type="primary" block>
-                            <Link to="/usuarios">Perfiles de usuario</Link>                    
-                        </Button>
-                        <Button style={{marginTop:'10px'}} type="primary" block>
-                            <Link to="/preguntas">Preguntas de las rutas</Link>                    
-                        </Button>
-                        <Button style={{marginTop:'10px'}} type="danger" block onClick={this.signOut}>
-                        Logout
-                        </Button>
-                   
-                    </Drawer>
+                    
                 </div>
                         
 
+                <Layout className="layout" style={{ minHeight: '1vh', background: '#fff' }}>
                 {this.renderRedirect()}
                 <Header style={{ background: '#33A8FF', padding: 0 }} >
 
-                 
-                    <Button onClick={this.showDrawer} style={{width:'50px', position: 'fixed', marginLeft:'-49%', marginTop: '18px'}} block><img src={menuIcon} style={{ height: "50%", width: "100%"}} /></Button>
-
                     <div className="logo" >
-                        <img src={logo} alt="Logo" style={{ height: "2%", width: "2%", marginLeft: "10px" }} />
                     </div>
                     
                     <div className="logout" style={{ alignItems: "center", marginRight: "10px" }}>
@@ -170,4 +135,4 @@ class Dashboard extends Component {
 }
 
 
-export default Dashboard;
+export default DashboardLogin;

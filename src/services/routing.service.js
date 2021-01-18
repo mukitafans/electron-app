@@ -1,7 +1,9 @@
 import axios from 'axios';
-import TrackAlfon from '../assets/json/track_alfon.json';
+import { routing } from 'leaflet';
+//import TrackAlfon from '../assets/json/track_alfon.json';
 
 //Get track in JSON
+/*
 const ArrTrackAlfonReves = [];
 const ArrTrackAlfon = [];
 TrackAlfon.track.map(obj => {
@@ -18,8 +20,10 @@ export const routingService = {
     getRouteParking,
     getRouteParkingTrackAlfon
 };
-
-
+*/
+export const routingService = {
+    getRoute
+};
 //Get route from two points selected
 function getRoute(lat1, lng1, lat2, lng2) {
     return axios.get("https://graphhopper.com/api/1/route?point=" + lat1 + "," + lng1 + "&point=" + lat2 + "," + lng2 + "&vehicle=foot&locale=de&calc_points=true&points_encoded=false&key=75fbf8a1-dfb9-4102-84fb-123f5de9855e")
@@ -34,7 +38,7 @@ function getRoute(lat1, lng1, lat2, lng2) {
         })
         .catch(() => { return { error: "Routing fail!" } });
 }
-
+/*
 //Get route in to parking
 function getRouteParking(lat1, lng1, lat2, lng2) {
     let start = 10000000, end = 1000000, posStart = 0, posEnd = 0;
@@ -57,6 +61,7 @@ function getRouteParking(lat1, lng1, lat2, lng2) {
 }
 
 //Get route from trak defined in ficoba
+
 function getRouteParkingTrackAlfon(lat1, lng1, lat2, lng2) {
     let start = 10000000, end = 1000000, posStart = 0, posEnd = 0;
     ArrTrackAlfon.forEach((point, i) => {
@@ -76,7 +81,7 @@ function getRouteParkingTrackAlfon(lat1, lng1, lat2, lng2) {
     if (posStart > posEnd) return ArrTrackAlfonReves.slice(posEnd, posStart)
     return ArrTrackAlfonReves.slice(posStart, posEnd)
 }
-
+*/
 const distance = (lat1, lon1, lat2, lon2) => {
     var R = 6371; // km (change this constant to get miles)
     var dLat = (lat2 - lat1) * Math.PI / 180;

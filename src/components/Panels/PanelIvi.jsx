@@ -32,7 +32,7 @@ class PanelIvi extends React.Component {
                 subimage = "/images/speed_limit/" + objIvi.spm + ".png";
 
             return (
-                <Card size="small" title="Add traces and save" bordered={false} style={{ width: 300 }}>
+                <Card size="small" title="Add traces and save" bordered={false} style={{ width: 500 }}>
                     <Meta
                         avatar={
                             <Avatar size={50} shape="square" src={subimage} />
@@ -64,8 +64,10 @@ class PanelIvi extends React.Component {
                         <Col className="col_text" span={24}>
                             <div style={{ marginTop: 16 }}>
                                 <Radio.Group defaultValue="detection" size="small" style={{ display: "block" }} onChange={(val) => this.props.onChangeRadio(val.target.value)}>
-                                    <Radio.Button value="detection">Detection</Radio.Button>
-                                    <Radio.Button value="relevance">Relevance</Radio.Button>
+                                    <Radio.Button value="detection">Rutas</Radio.Button>
+                                   {/*NOTAS
+                                   <Radio.Button value="relevance">Relevance</Radio.Button>
+                                   */} 
                                 </Radio.Group>
                             </div>
                         </Col>

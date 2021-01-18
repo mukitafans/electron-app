@@ -21,10 +21,10 @@ function login(username, password) {
     //http request
     return axios
         .post(globals.url_api + "authenticate", {
-           // username: username,
-           // password: password,
-           username: "david",
-           password: "david",
+            username: username,
+            password: password,
+           //username: "david",
+           //password: "david",
         })
         .then((res) => {
             if (res.status === 200) {

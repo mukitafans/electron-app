@@ -27,17 +27,23 @@ import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons'
 
 //Variables globales
 import { globals } from "../variables/config.js";
-
+//Service to get routes (traces with two points)
+import { routingService } from '../services/routing.service.js';
 
 //Componentes
 import Chat from "./Chat.jsx";
 import MarkerIvi from "./Markers/Ivi.jsx";
-import NewIvi from "./Panels/PanelIvi.jsx";
+import NewIvi from "./Modals/NewIvi.jsx";
+import PanelIvi from "./Panels/PanelIvi.jsx";
 
 
 const { Option } = Select;
 
 const RadioGroup = Radio.Group;
+
+//Ficoba parking
+const polygonZone = [[43.345991787074105, -1.7898488044738772], [43.34616928790513, -1.7897576093673708], [43.34648137601981, -1.7893901467323305], [43.34622000233296, -1.788381636142731], [43.34568164701375, -1.7886203527450564]];
+
 
 //Tiles for map
 const map_tiles = [
@@ -130,10 +136,10 @@ class MapTodo extends React.Component {
         let token = (objUser && objUser.token) ? objUser.token : "";
 
         //Get all events
-        axios.get(globals.url_api + 'data', {
+        axios.get(globals.url_api, {
             headers: { 'x-access-token': token }
         })
-            .then(res => (res.status === 200) && this.setState({ poi: res.data.poi, denm: res.data.denm, ivi: res.data.ivi }));
+            .then(res => (res.status === 200) && this.setState({ivi: res.data.ivi }));
     }
 
     //Change Tile map in moment and save in local storage
@@ -203,7 +209,11 @@ class MapTodo extends React.Component {
 
     //Abrir formulario para añadir ruta
     openIviModal = (e) => this.setState({ visibleIvi: true, latLonClick: e.latlng });
-   
+    handleCancelIvi = () => {
+        this.setState({ visibleIvi: false });
+        const { form } = this.formRefIvi.props;
+        form.resetFields();
+    };
 
     //On add ivi in Zones panel
     handleCreateIviWithZones = () => {
@@ -220,7 +230,7 @@ class MapTodo extends React.Component {
             valid_from: currentEventIvi.valid_from,
             valid_to: currentEventIvi.valid_to,
             cause_code: currentEventIvi.cause_code,
-            relevance_points: JSON.stringify(currentEventIvi.relevance_zones),
+            //relevance_points: JSON.stringify(currentEventIvi.relevance_zones),
             detection_points: JSON.stringify(currentEventIvi.detection_zones)
         }, {
             headers: { 'x-access-token': token },
@@ -284,8 +294,8 @@ class MapTodo extends React.Component {
                         valid_to: valid_to.unix(),
                         latitude: latLonClick.lat,
                         long: latLonClick.lng,
-                        detection_zones: [],
-                        relevance_zones: []
+                        detection_zones: []
+                       // relevance_zones: []
                     },
                     visibleIvi: false,
                     clickMapStatus: "detection",
@@ -296,6 +306,75 @@ class MapTodo extends React.Component {
             //Reset form
             form.resetFields();
         });
+    };
+    //To add new zone in denm and relevation or detection in ivi
+    handleNewZone = (e) => {
+        let { clickMapStatus, newTraceDenmStart, currentEventDenm, currentEventIvi } = this.state;
+        if (!clickMapStatus) return;
+        if (clickMapStatus === "denm") {
+            if (!newTraceDenmStart) {
+                this.setState({ newTraceDenmStart: e.latlng, customCur: "add-end-zone-cur" })
+            } else {
+                let insideParking = PointInPolygon([currentEventDenm.lat, currentEventDenm.lon], polygonZone)
+
+                if (insideParking) {
+                    //AQUI ENEKO
+                    //let points = routingService.getRouteParking(newTraceDenmStart.lat, newTraceDenmStart.lng, e.latlng.lat, e.latlng.lng);
+                    let points = routingService.getRouteParkingTrackAlfon(newTraceDenmStart.lat, newTraceDenmStart.lng, e.latlng.lat, e.latlng.lng);
+
+                    currentEventDenm.zones.push(points);
+                    this.setState({ currentEventDenm, newTraceDenmStart: null, customCur: "add-start-zone-cur" });
+                } else {
+
+                    routingService.getRoute(newTraceDenmStart.lat, newTraceDenmStart.lng, e.latlng.lat, e.latlng.lng)
+                        .then(response => {
+                            currentEventDenm.zones.push(response.array);
+                            if (response) this.setState({ currentEventDenm, newTraceDenmStart: null, customCur: "add-start-zone-cur" });
+                        });
+                }
+            }
+        }
+        else if (clickMapStatus === "detection") {
+            let insideParking = PointInPolygon([currentEventIvi.latitude, currentEventIvi.long], polygonZone)
+
+            if (insideParking) {
+                //AQUI ENEKO
+                //let points = routingService.getRouteParking(currentEventIvi.latitude, currentEventIvi.long, e.latlng.lat, e.latlng.lng);
+                let points = routingService.getRouteParkingTrackAlfon(currentEventIvi.latitude, currentEventIvi.long, e.latlng.lat, e.latlng.lng);
+
+                currentEventIvi.detection_zones.push(points);
+            
+                this.setState({ currentEventIvi });
+            } else {
+
+                routingService.getRoute(e.latlng.lat, e.latlng.lng, currentEventIvi.latitude, currentEventIvi.long)
+                    .then(response => {
+                        currentEventIvi.detection_zones.push(response.array);
+                        if (response) this.setState({ currentEventIvi });
+                    });
+            }
+        }
+        else if (clickMapStatus === "relevance") {
+            let insideParking = PointInPolygon([currentEventIvi.latitude, currentEventIvi.long], polygonZone)
+
+            if (insideParking) {
+                //AQUI ENEKO
+                //let points = routingService.getRouteParking(currentEventIvi.latitude, currentEventIvi.long, e.latlng.lat, e.latlng.lng);
+                let points = routingService.getRouteParkingTrackAlfon(currentEventIvi.latitude, currentEventIvi.long, e.latlng.lat, e.latlng.lng);
+
+                currentEventIvi.relevance_zones.push(points);
+                this.setState({ currentEventIvi });
+            } else {
+
+                routingService.getRoute(currentEventIvi.latitude, currentEventIvi.long, e.latlng.lat, e.latlng.lng)
+                    .then(response => {
+                        currentEventIvi.relevance_zones.push(response.array);
+                        if (response) this.setState({ currentEventIvi });
+                    });
+            }
+        }
+
+
     };
 
     //Change IVI mouse
@@ -310,7 +389,7 @@ class MapTodo extends React.Component {
 
     //RENDER PARA LO VISUAL
     render() {
-        const { tile_map, position, zoom, ivi, visibleIvi } = this.state;
+        const { tile_map, position, zoom, ivi, currentEventIvi, visibleIvi } = this.state;
         return (
             <Col span={24} style={{ padding: 0 }}>
                 <Button style={{padding:'0px'}} type="primary" block>
@@ -325,6 +404,7 @@ class MapTodo extends React.Component {
                     onCancel={this.handleCancelIvi}
                     onCreate={this.handleCreateIvi}
                 />
+                
 
 
                 {/*Map object*/}
@@ -341,10 +421,10 @@ class MapTodo extends React.Component {
                     contextmenuItems={[
                         
                         {
-                            text: 'Prueba',
+                            text: 'Insertar ruta',
                             icon: ZoomControl,
                             callback: (e) => this.openIviModal(e),
-                            hideOnSelect: true
+                            //hideOnSelect: true
                             
                         },'-', {
                             text: 'Zoom in',
@@ -360,6 +440,18 @@ class MapTodo extends React.Component {
                     ref={map => this.map = map}
                 >
 
+                     {/*Panel to add zones on Ivi*/}
+                    <Control position="topright" >
+                        <PanelIvi
+                            objIvi={currentEventIvi}
+                            visible={visibleIvi}
+                            onCreate={() => this.handleCreateIviWithZones()}
+                            onCancel={() => this.handleCancelWithZones()}
+                            onChangeRadio={(val) => this.changeZoneType(val)}
+                            removeZoneDetection={(i) => this.removeZoneDetection(i)}
+                            removeZoneRelevance={(i) => this.removeZoneRelevance(i)}
+                        />
+                    </Control>
                     <ZoomControl position="topright" />
                     <TileLayer
                         url={tile_map}

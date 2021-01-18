@@ -15,7 +15,12 @@ class Login extends Component {
         this.state = {
             redirect: false,
             loginFail: false,
-            failText: ""
+            failText: "",
+            islogged: false,
+            loginParams: {
+              user_id: "",
+              user_password: ""
+            }
         };
     }
     componentDidMount() {
@@ -31,6 +36,7 @@ class Login extends Component {
             return <Redirect to='/' />
         }
     }
+
 
     //Send login request
     handleSubmit = e => {
@@ -52,9 +58,36 @@ class Login extends Component {
         this.setState({ [e.target.name]: e.target.value })
     }
 
+    //NEW PARA LOGIN CINCELADO
+    handleFormChange = event => {
+        let loginParamsNew = { ...this.state.loginParams };
+        let val = event.target.value;
+        loginParamsNew[event.target.name] = val;
+        this.setState({
+          loginParams: loginParamsNew
+        });
+      };
+     
+      login = event => {
+        let user_id = this.state.loginParams.user_id;
+        let user_password = this.state.loginParams.user_password;
+        if (user_id === "admin" && user_password === "admin") {
+          localStorage.setItem("token", "T");
+          this.setState({
+            islogged: true
+          });
+        }
+        event.preventDefault();
+      };
+
+
+
     render() {
         const { loginFail, failText } = this.state;
         const { getFieldDecorator } = this.props.form;
+        if (localStorage.getItem("token")) {
+            return <Redirect to="/" />;
+        }
         return (
             <div>
                 {this.state.redirect ? <Redirect to='/' /> :
@@ -62,13 +95,14 @@ class Login extends Component {
                         <Header style={{ background: '#33A8FF', padding: 0 }} >
                             <h1>LOGIN TOPE DE WAPO</h1>
                             <Button style={{padding:'0px'}} type="primary" block>
-                        <Link to="/usuarios">Lista de rutas</Link>       
+                        <Link to="/todo">Lista de rutas</Link>       
                     </Button>
                         </Header>
                         <Content>
                             <Row style={{ background: '#fff', minHeight: "calc(100vh - 140px)" }} type="flex" justify="space-around" align="middle">
                                 <Col sm={24} md={12} lg={6} xl={6} style={{ textAlign: "center" }}>
-                                    <Form onSubmit={this.handleSubmit} className="login-form" style={{ padding: 24 }}>
+                                   {/*<Form onSubmit={this.handleSubmit} className="login-form" style={{ padding: 24 }}>*/} 
+                                   <Form onSubmit={this.login} className="login-form" style={{ padding: 24 }}>
                                         <img src={logo} alt="Logo" style={{ height: "20vh", marginBottom: "20px" }} />
                                         <Form.Item>
 
@@ -77,8 +111,9 @@ class Login extends Component {
                                             })(
                                                 <Input
                                                     prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                                    placeholder="Username"
-                                                    name="username"
+                                                    placeholder="Introduce el usuario"
+                                                    onChange={this.handleFormChange}
+                                                    name="user_id"
                                                 />,
                                             )}
                                         </Form.Item>
@@ -89,8 +124,9 @@ class Login extends Component {
                                                 <Input
                                                     prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                                     type="password"
-                                                    placeholder="Password"
-                                                    name="password"
+                                                    onChange={this.handleFormChange}
+                                                    placeholder="Introduce la contraseña"
+                                                    name="user_password"
                                                 />,
                                             )}
 

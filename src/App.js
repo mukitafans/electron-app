@@ -4,6 +4,8 @@ import './App.css';
 import "antd/dist/antd.css";
 import Dashboard from './layouts/Dashboard.jsx';
 import Login from './layouts/Login.jsx';
+//import Login from './layouts/DashboardLogin.jsx';
+
 import localizaciones from './components/CrudLocalizaciones';
 import preguntas from './components/CrudPreguntas';
 import usuarios from './components/CrudUsuarios';
@@ -17,8 +19,9 @@ const App = () => (
     <BrowserRouter>
       <Switch>
         {/* PARA HACER PRUEBAS CAMBIAR EL ORDEN */}
-        <Route path="/login" component={Login} />
         <Route path="/" component={Dashboard} />
+        <Route path="/login" component={Login} />
+        
         <Route path="/localizaciones" component={localizaciones} />
         <Route path="/preguntas" component={preguntas} />
         <Route path="/ranking" component={ranking} />
