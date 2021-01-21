@@ -12,9 +12,9 @@ import { Layout, Menu, Button, Drawer, Table, Badge, Dropdown, Icon } from 'antd
 import { authenticationService } from '../services/authentication.service.js';
 
 
-const data = [{"nombre":"Irun","area":0.0,"listaRutas":[{"nombre":"Ruta1","transporte":"Piernas","tiempo":2892,"km_totales":1,"listaPuntos":[{"nombre":"Behobia","lat":43.34228621776414,"log":-1.7603850690135165,"area_total":132,"oculto":true,"tipo":"0","ruta":null,"listaPreguntas":[{"pregunta":"Quien es mas guapo de los tres","listaRespuestas":["DAbiz El tonto","Torron el zorrrroooooo","Iker Martinez Dios Supremo"],"respuesta_correcta":"2","puntuacion_pregunta":12}]},{"nombre":"Tren","lat":43.34491607256525,"log":-1.7934859763070243,"area_total":0,"oculto":false,"tipo":"0","ruta":null,"listaPreguntas":null}]},{"nombre":"Ruta 2","transporte":"nadando","tiempo":12,"km_totales":11,"listaPuntos":[{"nombre":"Olaberria","lat":43.32996446957748,"log":-1.78845516017538,"area_total":132,"oculto":true,"tipo":"2","ruta":null,"listaPreguntas":[{"pregunta":"Quien es mas guapo de los tres","listaRespuestas":["DAbiz El tonto","Torron el Torron","Iker Martinez Dios Supremo"],"respuesta_correcta":"2","puntuacion_pregunta":12}]},{"nombre":"Lapize","lat":43.313644024877185,"log":-1.8096109065689507,"area_total":0,"oculto":false,"tipo":"2","ruta":null,"listaPreguntas":null}]}]},{"nombre":"Hondarribia","area":0.0,"listaRutas":[{"nombre":"Ruta 3","transporte":"Piernas","tiempo":2892,"km_totales":1,"listaPuntos":[{"nombre":"Puerto","lat":43.38875433767975,"log":-1.7905649167319726,"area_total":132,"oculto":true,"tipo":"Pruebas","ruta":null,"listaPreguntas":[{"pregunta":"Quien es mas guapo de los tres","listaRespuestas":["DAbiz El tonto","Torron el zorrrroooooo","Iker Martinez Dios Supremo"],"respuesta_correcta":null,"puntuacion_pregunta":12}]},{"nombre":"Playa","lat":43.38066450417254,"log":-1.798228292332793,"area_total":132,"oculto":true,"tipo":"Pruebas","ruta":null,"listaPreguntas":[{"pregunta":"Quien tres","listaRespuestas":["DAbiz El tonto","Torron el Tonto","Iker Martinez Dios Supremo"],"respuesta_correcta":null,"puntuacion_pregunta":8}]}]},{"nombre":"Ruta 4","transporte":"nadando","tiempo":12,"km_totales":11,"listaPuntos":[{"nombre":"Golf","lat":43.33773609026295,"log":-1.8265911234099834,"area_total":132,"oculto":true,"tipo":"Pruebas","ruta":null,"listaPreguntas":[{"pregunta":"Quien es mas guapo de los tres","listaRespuestas":["DAbiz El tonto","Torron el Torron","Iker Martinez Dios Supremo"],"respuesta_correcta":null,"puntuacion_pregunta":12}]}]}]}]
+const data = [{"nombre":"Irun","area":0.0,"listaRutas":[{"nombre":"Ruta1","transporte":"Piernas","tiempo":2892,"km_totales":1,"listaPuntos":[{"nombre":"Behobia","lat":43.34228621776414,"log":-1.7603850690135165,"area_total":132,"oculto":true,"tipo":"0","ruta":null,"listaPreguntas":[{"pregunta":"Quien es mas guapo de los tres","listaRespuestas":["DAbiz El tonto","Torron el zorrrroooooo","Iker Martinez Dios Supremo"],"respuesta_correcta":"2","puntuacion_pregunta":12}]}]},{"nombre":"Ruta 2","transporte":"nadando","tiempo":12,"km_totales":11,"listaPuntos":[{"nombre":"Olaberria","lat":43.32996446957748,"log":-1.78845516017538,"area_total":132,"oculto":true,"tipo":"2","ruta":null,"listaPreguntas":[{"pregunta":"Quien es mas guapo de los tres","listaRespuestas":["DAbiz El tonto","Torron el Torron","Iker Martinez Dios Supremo"],"respuesta_correcta":"2","puntuacion_pregunta":12}]}]}]},{"nombre":"Hondarribia","area":0.0,"listaRutas":[{"nombre":"Ruta 3","transporte":"Piernas","tiempo":2892,"km_totales":1,"listaPuntos":[{"nombre":"Puerto","lat":43.38875433767975,"log":-1.7905649167319726,"area_total":132,"oculto":true,"tipo":"Pruebas","ruta":null,"listaPreguntas":[{"pregunta":"Quien es mas guapo de los tres","listaRespuestas":["DAbiz El tonto","Torron el zorrrroooooo","Iker Martinez Dios Supremo"],"respuesta_correcta":null,"puntuacion_pregunta":12}]},{"nombre":"Playa","lat":43.38066450417254,"log":-1.798228292332793,"area_total":132,"oculto":true,"tipo":"Pruebas","ruta":null,"listaPreguntas":[{"pregunta":"Quien tres","listaRespuestas":["DAbiz El tonto","Torron el Tonto","Iker Martinez Dios Supremo"],"respuesta_correcta":null,"puntuacion_pregunta":8}]}]},{"nombre":"Ruta 4","transporte":"nadando","tiempo":12,"km_totales":11,"listaPuntos":[{"nombre":"Golf","lat":43.33773609026295,"log":-1.8265911234099834,"area_total":132,"oculto":true,"tipo":"Pruebas","ruta":null,"listaPreguntas":[{"pregunta":"Quien es mas guapo de los tres","listaRespuestas":["DAbiz El tonto","Torron el Torron","Iker Martinez Dios Supremo"],"respuesta_correcta":null,"puntuacion_pregunta":12}]}]}]}]
 
-
+//LISTA PREGUNTAS SI ESTA NULL PETA
 
 class CrudPreguntas extends Component{
     constructor(props) {
@@ -41,11 +41,11 @@ class CrudPreguntas extends Component{
                     <h5>{punto.lat}</h5>
                     <h5>{punto.log}</h5>
                     {console.log(punto)}
-                 {/*
-                       {punto.listaPreguntas.map((preg, y) => <div>
+                 
+                    {punto.listaPreguntas.map((preg, y) => <div>
                         <h5>{preg.pregunta}</h5> 
                     </div>)}
-                 */}
+                 
 
                 </div>)}
 
