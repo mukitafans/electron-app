@@ -1,5 +1,5 @@
 import React from "react";
-
+import img from '../../assets/img/logo.png'
 import { Row, Col, Card, Icon, Avatar, Divider, Button, List, Radio } from 'antd';
 import moment from 'moment';
 
@@ -28,8 +28,8 @@ class PanelIvi extends React.Component {
 
         if (objIvi && objIvi.latitude && objIvi.long) {
 
-            let title = "Speed limit",
-                subimage = "/images/speed_limit/" + objIvi.spm + ".png";
+            let title = "Insercion de ruta",
+                subimage = img;
 
             return (
                 <Card size="small" title="Add traces and save" bordered={false} style={{ width: 500 }}>
@@ -38,17 +38,15 @@ class PanelIvi extends React.Component {
                             <Avatar size={50} shape="square" src={subimage} />
                         }
                         title={title}
-                        description={"Speed limit"}
+                        description={"Introduce todos los campos"}
                     />
                     <Divider />
                     <Row gutter={[16, 8]}>
                         <Col className="col_text" span={24}>
-                            <span className="col_label">{"Valid from: "}</span>
-                            {moment(parseInt(objIvi.valid_from) * 1000).format("YYYY/MM/DD HH:mm:ss")}
+                           
                         </Col>
                         <Col className="col_text" span={24}>
-                            <span className="col_label">{"Valid to: "}</span>
-                            {moment(parseInt(objIvi.valid_to) * 1000).format("YYYY/MM/DD HH:mm:ss")}
+                            
                         </Col>
                         <Col className="col_text" span={12}>
                             <span className="col_label">{"Lat: "}</span>
@@ -82,15 +80,7 @@ class PanelIvi extends React.Component {
                                 renderItem={(_, i) => <List.Item actions={[<span key={"list-zone-det-delete" + i}><Icon type="delete" onClick={() => this.props.removeZoneDetection(i)} style={{ fontSize: '16px', color: '#ff7875' }} /></span>]}>{"Zone detection " + (i + 1)}</List.Item>}
                             />
                         </Col>
-                        <Col className="col_text" span={24}>
-                            <List
-                                size="small"
-                                header={<div>Relevance Zones</div>}
-                                bordered
-                                dataSource={objIvi.relevance_zones}
-                                renderItem={(_, i) => <List.Item actions={[<span key={"list-zone-rel-delete" + i}><Icon type="delete" onClick={() => this.props.removeZoneRelevance(i)} style={{ fontSize: '16px', color: '#ff7875' }} /></span>]}>{"Zone relevance " + (i + 1)}</List.Item>}
-                            />
-                        </Col>
+                       
                     </Row>
                     <Divider />
                     <Row gutter={[16, 16]}>

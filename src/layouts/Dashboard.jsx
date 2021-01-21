@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 
 import Map from '../views/Map.jsx';
 import Localizaciones from '../components/CrudLocalizaciones.jsx';
+import Preguntas from '../components/CrudPreguntas.jsx';
+
 import Login from './Login.jsx';
 //import logoCmobile from './../../assets/img/c_mobile.png';
 import logo from '../assets/img/logo.png';
@@ -22,13 +24,17 @@ const routes = [
         main: () => <Login/>
       },
     {
-      path: "/",
-      exact: true,
-      main: () => <Map/>
+        path: "/",
+        exact: true,
+        main: () => <Map/>
     },
     {
-      path: "/localizaciones",
-      main: () => <Localizaciones/>
+        path: "/localizaciones",
+        main: () => <Localizaciones/>
+    },
+    {
+        path: "/preguntas",
+        main: () => <Preguntas/>
     }
     
   ];

@@ -16,6 +16,7 @@ import Geolocation from 'react-geolocation'
 //Icons to context menu
 import ZoomIn from 'leaflet-contextmenu/examples/images/zoom-in.png'
 import ZoomOut from 'leaflet-contextmenu/examples/images/zoom-out.png'
+import icono from '../assets/img/marker.png'
 
 import PointInPolygon from 'point-in-polygon';
 
@@ -132,14 +133,32 @@ class MapTodo extends React.Component {
 
     componentDidMount() {
         //Get token to request
-        let objUser = JSON.parse(localStorage.getItem("currentUser"));
-        let token = (objUser && objUser.token) ? objUser.token : "";
+        //let objUser = JSON.parse(localStorage.getItem("currentUser"));
+        //let token = (objUser && objUser.token) ? objUser.token : "";
 
         //Get all events
-        axios.get(globals.url_api, {
-            headers: { 'x-access-token': token }
-        })
-            .then(res => (res.status === 200) && this.setState({ivi: res.data.ivi }));
+        fetch('http://137.116.219.96:80/localizaciones/all')
+            .then(response => response.json())
+            .then(
+            (res) => { console.log({ivi: res})
+            this.setState({isLoaded: true, ivi: res });
+            },
+            (error) => {
+                this.setState({
+                  isLoaded: true,
+                  error
+                });
+            }
+        )
+        /*
+        fetch(`http://137.116.219.96:80/localizaciones/all`)
+        .then(res => res.json())
+        .then(
+            (result)=>{
+                console.log(result)
+            }
+        )*/
+            
     }
 
     //Change Tile map in moment and save in local storage
@@ -255,12 +274,7 @@ class MapTodo extends React.Component {
                 return;
             }
 
-            //Get valid dates to send 
-            let valid_from = values.dates[0].utcOffset(0);
-            valid_from.set({ hour: 0, minute: 0, second: 0 });
-
-            let valid_to = values.dates[1].utcOffset(0);
-            valid_to.set({ hour: 23, minute: 59, second: 59 });
+            
 
             const { ivi, latLonClick } = this.state;
 
@@ -272,9 +286,8 @@ class MapTodo extends React.Component {
                 axios.post(globals.url_api + 'ivi', {
                     spm: values.speed_limit,
                     lat: latLonClick.lat,
-                    lon: latLonClick.lng,
-                    valid_from: valid_from.unix(),
-                    valid_to: valid_to.unix()
+                    lon: latLonClick.lng
+                  
                 }, {
                     headers: { 'x-access-token': token },
                 })
@@ -290,8 +303,7 @@ class MapTodo extends React.Component {
                 this.setState({
                     currentEventIvi: {
                         spm: values.speed_limit,
-                        valid_from: valid_from.unix(),
-                        valid_to: valid_to.unix(),
+                    
                         latitude: latLonClick.lat,
                         long: latLonClick.lng,
                         detection_zones: []
@@ -312,27 +324,7 @@ class MapTodo extends React.Component {
         let { clickMapStatus, newTraceDenmStart, currentEventDenm, currentEventIvi } = this.state;
         if (!clickMapStatus) return;
         if (clickMapStatus === "denm") {
-            if (!newTraceDenmStart) {
-                this.setState({ newTraceDenmStart: e.latlng, customCur: "add-end-zone-cur" })
-            } else {
-                let insideParking = PointInPolygon([currentEventDenm.lat, currentEventDenm.lon], polygonZone)
-
-                if (insideParking) {
-                    //AQUI ENEKO
-                    //let points = routingService.getRouteParking(newTraceDenmStart.lat, newTraceDenmStart.lng, e.latlng.lat, e.latlng.lng);
-                    let points = routingService.getRouteParkingTrackAlfon(newTraceDenmStart.lat, newTraceDenmStart.lng, e.latlng.lat, e.latlng.lng);
-
-                    currentEventDenm.zones.push(points);
-                    this.setState({ currentEventDenm, newTraceDenmStart: null, customCur: "add-start-zone-cur" });
-                } else {
-
-                    routingService.getRoute(newTraceDenmStart.lat, newTraceDenmStart.lng, e.latlng.lat, e.latlng.lng)
-                        .then(response => {
-                            currentEventDenm.zones.push(response.array);
-                            if (response) this.setState({ currentEventDenm, newTraceDenmStart: null, customCur: "add-start-zone-cur" });
-                        });
-                }
-            }
+          console.log('mal')
         }
         else if (clickMapStatus === "detection") {
             let insideParking = PointInPolygon([currentEventIvi.latitude, currentEventIvi.long], polygonZone)
@@ -354,25 +346,6 @@ class MapTodo extends React.Component {
                     });
             }
         }
-        else if (clickMapStatus === "relevance") {
-            let insideParking = PointInPolygon([currentEventIvi.latitude, currentEventIvi.long], polygonZone)
-
-            if (insideParking) {
-                //AQUI ENEKO
-                //let points = routingService.getRouteParking(currentEventIvi.latitude, currentEventIvi.long, e.latlng.lat, e.latlng.lng);
-                let points = routingService.getRouteParkingTrackAlfon(currentEventIvi.latitude, currentEventIvi.long, e.latlng.lat, e.latlng.lng);
-
-                currentEventIvi.relevance_zones.push(points);
-                this.setState({ currentEventIvi });
-            } else {
-
-                routingService.getRoute(currentEventIvi.latitude, currentEventIvi.long, e.latlng.lat, e.latlng.lng)
-                    .then(response => {
-                        currentEventIvi.relevance_zones.push(response.array);
-                        if (response) this.setState({ currentEventIvi });
-                    });
-            }
-        }
 
 
     };
@@ -390,6 +363,15 @@ class MapTodo extends React.Component {
     //RENDER PARA LO VISUAL
     render() {
         const { tile_map, position, zoom, ivi, currentEventIvi, visibleIvi } = this.state;
+        console.log(ivi)
+        const markerIcon = L.icon({
+            iconSize: [25, 41],
+            iconAnchor: [10, 41],
+            popupAnchor: [2, -40],
+            // specify the path here
+            iconUrl: "https://unpkg.com/leaflet@1.5.1/dist/images/marker-icon.png",
+            shadowUrl: "https://unpkg.com/leaflet@1.5.1/dist/images/marker-shadow.png"
+          });
         return (
             <Col span={24} style={{ padding: 0 }}>
                 <Button style={{padding:'0px'}} type="primary" block>
@@ -404,8 +386,7 @@ class MapTodo extends React.Component {
                     onCancel={this.handleCancelIvi}
                     onCreate={this.handleCreateIvi}
                 />
-                
-
+            
 
                 {/*Map object*/}
                 <Map
@@ -449,7 +430,6 @@ class MapTodo extends React.Component {
                             onCancel={() => this.handleCancelWithZones()}
                             onChangeRadio={(val) => this.changeZoneType(val)}
                             removeZoneDetection={(i) => this.removeZoneDetection(i)}
-                            removeZoneRelevance={(i) => this.removeZoneRelevance(i)}
                         />
                     </Control>
                     <ZoomControl position="topright" />
@@ -479,12 +459,41 @@ class MapTodo extends React.Component {
                             }
                         />
                     </Control>
+                    {
+                        ////If exist Ivi to add zones
+                        currentEventIvi && <Marker
+                            position={[currentEventIvi.latitude, currentEventIvi.long]}
+                            icon={L.icon({
+                                iconUrl: icono,
+                                iconSize: [30, 30],
+                                iconAnchor: [15, 15],
+                                className: "image_grey"
+                            })
+                            }></Marker>
+                    }
+                      {
+                        //Zone detection with not added to DB
+                        currentEventIvi && currentEventIvi.detection_zones && currentEventIvi.detection_zones.map((zone, n) => {
+                            let obj_zone = [];
+                            zone && zone.forEach((el, i) => { obj_zone.push({ lat: el[1], lng: el[0] }) });
+                            return <Polyline key={"ivi-poly-detection-" + n} positions={obj_zone} color="#999999" weight={12} opacity={0.8} />
+                        })
+                    }
+
+                    {
+                        //Zone relevance with not added to DB
+                        currentEventIvi && currentEventIvi.relevance_zones && currentEventIvi.relevance_zones.map((zone, n) => {
+                            let obj_zone = [];
+                            zone && zone.forEach((el, i) => { obj_zone.push({ lat: el[1], lng: el[0] }) });
+                            return <Polyline key={"ivi-poly-relevance-" + n} positions={obj_zone} color="#CCCCCC" weight={12} opacity={0.8} />
+                        })
+                    }
 
                     <Control>
                         <Chat>
                         </Chat>
                     </Control>
-                    
+                   
                     {ivi.map((objIvi, id) => <MarkerIvi objIvi={objIvi} key={`marker-ivi-${id}`} handleDelete={() => this.handleDeleteIvi(objIvi.id)} />)}
 
                     </Map>

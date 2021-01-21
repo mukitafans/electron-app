@@ -6,81 +6,13 @@ import menuIcon from '../assets/img/Menuicon.png';
 import { Location, redirectTo } from '@reach/router'
 import { Redirect, Link } from 'react-router-dom';
 
-import { Layout, Menu, Button, Drawer, Table } from 'antd';
+import { Layout, Menu, Button, Drawer, Table, Badge, Dropdown, Icon } from 'antd';
 
 import { authenticationService } from '../services/authentication.service.js';
 
 import reqwest from 'reqwest';
 
 
-const datosArray = [
-
-
-] 
-
-const columns = [
-    {
-      title: 'Localizacion',
-      //dataIndex: 'nombre',
-      //sorter: true,
-      //render: nombre => `${nombre}`,
-      //width: '20%',
-      //key: 'nombre'
-    },
-    /*
-    title: 'Localizacion',
-    dataIndex: 'name',
-    sorter: true,
-    render: name => `${name.first} ${name.last}`,
-    width: '20%',
-  },*/
-    {
-        title: 'Nombre',
-        dataIndex: 'nombre2',
-        //key: 'nombre'
-    },
-    {
-        title: 'Lat',
-        dataIndex: 'lat',
-    },
-    {
-        title: 'Lon',
-        dataIndex: 'log',
-    },
-    {
-      title: 'Ciudad',
-      dataIndex: 'nombre',
-      filters: [{ text: 'Irun', value: 'Irun' }, { text: 'Donostia', value: 'Donostia' }],
-      width: '20%',
-    },
-    {
-        title: 'area',
-        dataIndex: 'area',
-    },
-    {
-        title: 'Nombre de la ruta',
-       // dataIndex: 'listaRutas',
-       // render: listaRutas => `${listaRutas.nombre}`,
-    },
-    {
-        title: 'Transporte',
-        dataIndex: 'transporte',
-      },
-      {
-        title: 'Duracion de la ruta',
-        dataIndex: 'duracion',
-      },
-      {
-        title: 'Distancia (km)',
-        dataIndex: 'km_totales',
-      },
-      {
-        title: '',
-        dataIndex: '',
-      },
-
-    
-  ];
 
 class CrudLocalizaciones extends Component{
     constructor(props) {
@@ -136,16 +68,123 @@ class CrudLocalizaciones extends Component{
           });
         });
     };
+
+
+
+    
     render(){
+     /*
+      const datosArrayRutas = 
+      <table>
+        {[this.state.data.map((item, index)=> {
+          return(
+
+          <tr>
+            <td>{item.listaRutas.map((item, index)=>{
+              return(
+                <td>{item.listaPuntos.map((item, index)=>{
+                  return(
+                    <td>{item.listaPreguntas.map((item, index)=>{
+                      return(
+                        <td>{item}</td>
+                      )
+                    })}</td>
+                  )
+                })}</td>
+              )
+            })
+            }</td>
+
+          </tr>
+          
+         )})]}
+        </table>
+        
+      
+      
+      
+      console.log(datosArrayRutas)
+      const datosArrayRutas = 
+      {this.state.data.Map((item, index)=>{
         return(
-            <Table
-            columns={columns}
-            //rowKey={record => record.login.uuid}
-            dataSource={this.state.data}
-           // pagination={this.state.pagination}
-            loading={this.state.loading}
-            onChange={this.handleTableChange}
-          />
+          {item.listaRutas}
+          )
+      })}*/
+
+      const columns = [
+        {
+          title: 'Localizacion',
+          dataIndex: 'nombre',
+          //sorter: true,
+          //render: nombre => `${nombre}`,
+          //width: '20%',
+          key: 'nombreLocalizacion'
+        },
+        /*
+        title: 'Localizacion',
+        dataIndex: 'name',
+        sorter: true,
+        render: name => `${name.first} ${name.last}`,
+        width: '20%',
+      },*/
+        {
+          title: 'area',
+          dataIndex: 'area',
+        },
+        {
+            title: 'NombreRuta',
+           // dataIndex: 'listaRutas["nombre"]',
+            key: 'nombreRuta2',
+            render: (record) => record.listaRutas.tiempo
+        },
+      
+        {
+            title: 'Lat',
+            dataIndex: 'lat',
+        },
+        {
+            title: 'Lon',
+            dataIndex: 'log',
+        },
+        {
+          title: 'Ciudad',
+          dataIndex: '',
+          filters: [{ text: 'Irun', value: 'Irun' }, { text: 'Donostia', value: 'Donostia' }],
+          width: '20%',
+        },
+        {
+            title: 'Nombre de la ruta',
+            dataIndex: '',
+           // render: listaRutas => `${listaRutas.nombre}`,
+        },
+        {
+            title: 'Transporte',
+            dataIndex: 'transporte',
+          },
+          {
+            title: 'Duracion de la ruta',
+            dataIndex: 'duracion',
+          },
+          {
+            title: 'Distancia (km)',
+            dataIndex: 'km_totales',
+          },
+          {
+            title: '',
+            dataIndex: '',
+          },
+    
+        
+      ];
+        return(
+         
+        <Table 
+        dataSource={this.state.data} 
+        columns={columns} 
+        rowKey={record => record.uid} 
+        >
+
+        </Table>
         );
     }
 

@@ -1,5 +1,7 @@
 import React from "react";
 
+import img from '../../assets/img/logo.png'
+
 //Leaflet
 import { Marker, Popup, Polyline } from 'react-leaflet'
 import L from 'leaflet';
@@ -38,26 +40,18 @@ class MarkerIvi extends React.Component {
         if (objIvi && objIvi.latitude && objIvi.long) {
 
             //Header pop up
-            let title = "Speed limit",
-                subimage = "/images/speed_limit/" + objIvi.spm + ".png";
-
+            let title = "Ruta",
+                subimage = img;
+               
             //Marker icon speed    
-            const markerSpeed = L.icon({
-                iconUrl: "/images/speed_limit/" + objIvi.spm + ".png",
+            const markerSpeed = L.ExtraMarkers.Icon({
+                iconUrl: img,
+                markerColor: 'blue', prefix: 'fa',
                 iconSize: [30, 30],
                 iconAnchor: [15, 15],
             });
 
-            //Relevance data
-            let relevace_array = JSON.parse(objIvi.relevance_points);
-            let obj_relevance = [];
-            relevace_array && relevace_array.forEach(array => {
-                let newObj = [];
-                array.forEach(el => {
-                    newObj.push({ lat: el[1], lng: el[0] })
-                });
-                obj_relevance.push(newObj);
-            });
+         
 
             //Detection data
             let detection_array = JSON.parse(objIvi.detection_points);
@@ -65,7 +59,7 @@ class MarkerIvi extends React.Component {
             detection_array && detection_array.forEach(array => {
                 let newObj = [];
                 array.forEach(el => {
-                    newObj.push({ lat: el[1], lng: el[0] })
+                    newObj.push({ lat: el[1], log: el[0] })
                 });
                 obj_detection.push(newObj);
             });
@@ -74,7 +68,6 @@ class MarkerIvi extends React.Component {
                 <div>
                     {/* Show traces detection and relevance */}
                     <Polyline positions={obj_detection} color="#FEB41C" weight={12} opacity={0.6} />
-                    <Polyline positions={obj_relevance} color="#FF720F" weight={12} opacity={0.6} />
 
                     {/* Show marker */}
                     <Marker position={[objIvi.latitude, objIvi.long]} icon={markerSpeed}>
@@ -93,6 +86,7 @@ class MarkerIvi extends React.Component {
                                 <Divider />
                                 {/* Show data */}
                                 <Row gutter={[16, 8]}>
+                                    {/*
                                     <Col className="col_text" span={24}>
                                         <span className="col_label">{"Valid from: "}</span>
                                         {moment(parseInt(objIvi.valid_from) * 1000).format("YYYY/MM/DD HH:mm:ss")}
@@ -109,6 +103,8 @@ class MarkerIvi extends React.Component {
                                         <span className="col_label">{"Lon: "}</span>
                                         {objIvi.long && objIvi.long.toFixed(5)}
                                     </Col>
+                                    */}
+                                    
                                 </Row>
                                 <Divider />
 

@@ -34,7 +34,7 @@ const IviCreateForm = Form.create({ name: 'form_ivi_in_modal' })(
                 >
                     <Form layout="vertical">
 
-                        <Form.Item label="Speed limit">
+                        <Form.Item label="nombre de la localizacion">
                             
                         </Form.Item>
 
@@ -46,7 +46,6 @@ const IviCreateForm = Form.create({ name: 'form_ivi_in_modal' })(
                             )}
                         </Form.Item>
 
-                        <img className="signals" src={""} alt="Signal"></img>
                     </Form>
                 </Modal>
             );
