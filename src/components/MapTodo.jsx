@@ -241,7 +241,7 @@ class MapTodo extends React.Component {
 
         let objUser = JSON.parse(localStorage.getItem("currentUser"));
         let token = (objUser && objUser.token) ? objUser.token : "";
-
+        /*
         axios.post(globals.url_api + 'ivi', {
             spm: currentEventIvi.spm,
             lat: currentEventIvi.latitude,
@@ -260,7 +260,30 @@ class MapTodo extends React.Component {
                     this.setState({ ivi, visibleDenm: false, clickMapStatus: null, newTraceDenmStart: null, currentEventIvi: null, customCur: "" });
                 }
             })
-            .catch(err => console.log("error", err));
+            .catch(err => console.log("error", err));*/
+            fetch('http://137.116.219.96:80/localizaciones/nuevaLocalizacion', {
+                method: 'POST',
+                headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+                },
+            
+                body: JSON.stringify({
+                        "nombre":'Prueba3', "area":10,
+                        "listaRutas":[{"nombre":'pruebaruta1', "transporte":'pie',"km_totales":11, "tiempo":"5000",
+                        "listaPuntos":[{"nombre":'puntoPrueba1', "lat":currentEventIvi.latitude, "log":currentEventIvi.long, "tipo":"prueba", "oculto": true, "area_total":1000, "listaPreguntas":[]},
+                                        {"nombre":'puntoPrueba2', "lat":"46.33979", "log":"-1.78863", "tipo":"prueba", "oculto": true, "area_total":1000, "listaPreguntas":[]}]}
+                                    ],
+                        })
+            })
+            .then((response) =>response.json())
+            .then((responseJson)=>{ 
+            //console the response 
+                console.log('response', responseJson);
+                })
+            .catch((error)=> {
+                console.log('error', error);
+            });
     };
 
     //On cancel in Zones panel
@@ -283,7 +306,8 @@ class MapTodo extends React.Component {
 
             //If not need traces
             if (!values.traces) {
-                axios.post(globals.url_api + 'ivi', {
+                let data = {nombre: 'irun', listaRutas: [{nombre: 'Ruta99', listaPuntos:[]}]}
+                /*axios.post(globals.url_api + 'ivi', {
                     spm: values.speed_limit,
                     lat: latLonClick.lat,
                     lon: latLonClick.lng
@@ -298,7 +322,28 @@ class MapTodo extends React.Component {
                             form.resetFields();
                         }
                     })
-                    .catch(err => console.log("error", err));
+                    .catch(err => console.log("error", err));*/
+                fetch('http://137.116.219.96:80/localizaciones/nuevaLocalizacion', {
+                    method: 'POST',
+                    headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                    },
+                
+                    body: JSON.stringify({
+                            "jsonrpc":"2.0",
+                            "method":"call",
+                            "params":{"nombre":"donosti"},
+                            "id":844267375})
+                })
+                .then((response) =>response.json())
+                .then((responseJson)=>{ 
+                //console the response 
+                    console.log('response', responseJson);
+                    })
+                .catch((error)=> {
+                    console.log('error', error);
+                });
             } else {
                 this.setState({
                     currentEventIvi: {
@@ -403,7 +448,14 @@ class MapTodo extends React.Component {
                         
                         {
                             text: 'Insertar ruta',
-                            icon: ZoomControl,
+                            icon: icono,
+                            callback: (e) => this.openIviModal(e),
+                            //hideOnSelect: true
+                            
+                        },
+                        {
+                            text: 'Insertar punto',
+                            icon: icono,
                             callback: (e) => this.openIviModal(e),
                             //hideOnSelect: true
                             
