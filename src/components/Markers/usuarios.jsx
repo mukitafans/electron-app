@@ -4,7 +4,7 @@ import icono from '../../assets/img/logo.png'
 
 //Leaflet
 import { Marker, Popup, Polyline } from 'react-leaflet'
-import L from 'leaflet';
+import L, { marker } from 'leaflet';
 
 import moment from "moment"; //To use dates
 
@@ -12,19 +12,18 @@ import { Row, Col, Card, Icon, Avatar, Divider, Popconfirm, Button } from 'antd'
 
 const { Meta } = Card;
 
-class MarkerIvi extends React.Component {
+class MarkerUsuarios extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            objIvi: null,
-            puntos: null
+            objIvi: null
         };
     }
 
     //Get Ivi
     componentDidMount() {
-        this.setState({ objIvi: this.props.objIvi, puntos: this.props.puntos });
+        this.setState({ objIvi: this.props.objIvi });
     }
 
     //On change Ivi
@@ -32,19 +31,17 @@ class MarkerIvi extends React.Component {
         if (this.props.objIvi !== prevProps.objIvi) {
             this.setState({ objIvi: this.props.objIvi });
         }
-        if (this.props.puntos !== prevProps.puntos) {
-            this.setState({ puntos: this.props.puntos });
-        }
+      
     }
 
     render() {
-        const { objIvi, puntos } = this.state;
+        const { objIvi } = this.state;
 
         //If valid object
-        if (puntos && puntos.latitude && puntos.long) {
+        if (objIvi && objIvi.lat && objIvi.log) {
 
             //Header pop up
-            let title = "Usuario",
+            let title = objIvi.usuario,
                 subimage = icono;
                
             //Marker icon speed    
@@ -59,24 +56,11 @@ class MarkerIvi extends React.Component {
 
          
 
-            //Detection data
-            let detection_array = JSON.parse(objIvi.detection_points);
-            let obj_detection = [];
-            detection_array && detection_array.forEach(array => {
-                let newObj = [];
-                array.forEach(el => {
-                    newObj.push({ lat: el[1], log: el[0] })
-                });
-                obj_detection.push(newObj);
-            });
-
             return (
                 <div>
-                    {/* Show traces detection and relevance */}
-                    <Polyline positions={obj_detection} color="#FEB41C" weight={12} opacity={0.6} />
 
                     {/* Show marker */}
-                    <Marker position={[puntos.lat, puntos.log]} icon={markerSpeed}>
+                    <Marker position={[objIvi.lat, objIvi.log]} icon={markerSpeed}>
 
                         {/* Show pop up */}
                         <Popup closeButton={false} >
@@ -87,20 +71,24 @@ class MarkerIvi extends React.Component {
                                         <Avatar size={50} shape="square" src={subimage} />
                                     }
                                     title={title}
-                                    description={moment(parseInt(objIvi.timestamp) * 1000).format("YYYY/MM/DD HH:mm:ss")}
+                                    description={  <Col className="col_text" span={24}><span className="col_label">{"Puntuacion del usuario: "}</span>
+                                        {objIvi.puntuacion_total}
+                                    </Col>}
                                 />
                                 <Divider />
                                 {/* Show data */}
                                 <Row gutter={[16, 8]}>
+                                    
+                                    <Col className="col_text" span={24}>
+                                    <span className="col_label">{"Ruta activa: "}</span>
+                                        {objIvi.ruta_activa && objIvi.ruta_activa.toFixed(5)}
+                                    </Col>
+                                    
+                                    <Col className="col_text" span={24}>
+                                    <span className="col_label">{"Email del usuario: "}</span>
+                                        {objIvi.email}
+                                    </Col>
                                     {/*
-                                    <Col className="col_text" span={24}>
-                                        <span className="col_label">{"Valid from: "}</span>
-                                        {moment(parseInt(objIvi.valid_from) * 1000).format("YYYY/MM/DD HH:mm:ss")}
-                                    </Col>
-                                    <Col className="col_text" span={24}>
-                                        <span className="col_label">{"Valid to: "}</span>
-                                        {moment(parseInt(objIvi.valid_to) * 1000).format("YYYY/MM/DD HH:mm:ss")}
-                                    </Col>
                                     <Col className="col_text" span={12}>
                                         <span className="col_label">{"Lat: "}</span>
                                         {objIvi.latitude && objIvi.latitude.toFixed(5)}
@@ -114,22 +102,7 @@ class MarkerIvi extends React.Component {
                                 </Row>
                                 <Divider />
 
-                                {/* To delete event */}
-                                <Row gutter={[16, 16]}>
-                                    <Col className="col_text" span={24}>
-                                        <Popconfirm
-                                            title="Are you sure delete this event?"
-                                            onConfirm={this.props.handleDelete}
-                                            //onCancel={cancel}
-                                            okText="Yes"
-                                            cancelText="No"
-                                        >
-                                            <Button type="danger" ghost block>
-                                                <Icon type="delete" key="delete" /> Delete
-                                        </Button>
-                                        </Popconfirm>
-                                    </Col>
-                                </Row>
+                        
                             </Card>
                         </Popup>
                     </Marker>
@@ -143,4 +116,4 @@ class MarkerIvi extends React.Component {
 
 }
 
-export default MarkerIvi;
+export default MarkerUsuarios;

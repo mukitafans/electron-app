@@ -41,10 +41,10 @@ class MarkerIvi extends React.Component {
         const { objIvi, puntos } = this.state;
 
         //If valid object
-        if (puntos && puntos.latitude && puntos.long) {
+        if (puntos && puntos.lat && puntos.log) {
 
             //Header pop up
-            let title = "Ruta",
+            let title = "Ruta "+puntos.nombre,
                 subimage = icono;
                
             //Marker icon speed    
@@ -59,7 +59,8 @@ class MarkerIvi extends React.Component {
 
          
 
-            //Detection data
+            //Detection data demomento nah
+            /*
             let detection_array = JSON.parse(objIvi.detection_points);
             let obj_detection = [];
             detection_array && detection_array.forEach(array => {
@@ -68,12 +69,12 @@ class MarkerIvi extends React.Component {
                     newObj.push({ lat: el[1], log: el[0] })
                 });
                 obj_detection.push(newObj);
-            });
+            });*/
 
             return (
                 <div>
-                    {/* Show traces detection and relevance */}
-                    <Polyline positions={obj_detection} color="#FEB41C" weight={12} opacity={0.6} />
+                    {/* Show traces detection and relevance 
+                    <Polyline positions={obj_detection} color="#FEB41C" weight={12} opacity={0.6} />*/}
 
                     {/* Show marker */}
                     <Marker position={[puntos.lat, puntos.log]} icon={markerSpeed}>
@@ -87,7 +88,7 @@ class MarkerIvi extends React.Component {
                                         <Avatar size={50} shape="square" src={subimage} />
                                     }
                                     title={title}
-                                    description={moment(parseInt(objIvi.timestamp) * 1000).format("YYYY/MM/DD HH:mm:ss")}
+                                    //description={moment(parseInt(objIvi.timestamp) * 1000).format("YYYY/MM/DD HH:mm:ss")}
                                 />
                                 <Divider />
                                 {/* Show data */}

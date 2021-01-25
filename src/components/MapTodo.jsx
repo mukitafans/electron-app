@@ -152,7 +152,7 @@ class MapTodo extends React.Component {
             }
         )
         await fetch('http://137.116.219.96:80/usuarios/all')
-        .then(response => response.json())
+        .then(response2 => response2.json())
         .then(
         (res2) => { console.log({usuarios: res2})
         this.setState({ usuarios: res2 });
@@ -423,18 +423,11 @@ class MapTodo extends React.Component {
     render() {
         const { tile_map, position, zoom, ivi, currentEventIvi, visibleIvi, usuarios } = this.state;
         console.log(ivi)
-        const markerIcon = L.icon({
-            iconSize: [25, 41],
-            iconAnchor: [10, 41],
-            popupAnchor: [2, -40],
-            // specify the path here
-            iconUrl: "https://unpkg.com/leaflet@1.5.1/dist/images/marker-icon.png",
-            shadowUrl: "https://unpkg.com/leaflet@1.5.1/dist/images/marker-shadow.png"
-          });
+        
         return (
             <Col span={24} style={{ padding: 0 }}>
                 <Button style={{padding:'0px'}} type="primary" block>
-                        <Link to="/login">Lista de rutas</Link>       
+                        <Link to="/login">Vuelta al login</Link>       
                     </Button>
 
 
@@ -528,7 +521,7 @@ class MapTodo extends React.Component {
                     {
                         ////If exist Ivi to add zones
                         currentEventIvi && <Marker
-                            position={[currentEventIvi.latitude, currentEventIvi.long]}
+                            position={[currentEventIvi.lat, currentEventIvi.log]}
                             icon={L.icon({
                                 iconUrl: icono,
                                 iconSize: [30, 30],
@@ -570,9 +563,10 @@ class MapTodo extends React.Component {
                     )
                    
                     )}
+                    
                     {
-                        usuarios.map((objIvi, id) =>
-                        <MarkerUsuarios objIvi={objIvi} key={`marker-usu-${id}`} />
+                        usuarios.map((objIvi, id_usuario) =>
+                        <MarkerUsuarios objIvi={objIvi} key={`marker-ivi2-${id_usuario}`, console.log(usuarios)} />
                         )
                     }
 
