@@ -269,7 +269,7 @@ class MapTodo extends React.Component {
                 },
             
                 body: JSON.stringify({
-                        "nombre":'Prueba3', "area":10,
+                        "nombre":'Prueba4nocaso', "area":10,
                         "listaRutas":[{"nombre":'pruebaruta1', "transporte":'pie',"km_totales":11, "tiempo":"5000",
                         "listaPuntos":[{"nombre":'puntoPrueba1', "lat":currentEventIvi.latitude, "log":currentEventIvi.long, "tipo":"prueba", "oculto": true, "area_total":1000, "listaPreguntas":[]},
                                         {"nombre":'puntoPrueba2', "lat":"46.33979", "log":"-1.78863", "tipo":"prueba", "oculto": true, "area_total":1000, "listaPreguntas":[]}]}
@@ -527,7 +527,7 @@ class MapTodo extends React.Component {
                         //Zone detection with not added to DB
                         currentEventIvi && currentEventIvi.detection_zones && currentEventIvi.detection_zones.map((zone, n) => {
                             let obj_zone = [];
-                            zone && zone.forEach((el, i) => { obj_zone.push({ lat: el[1], lng: el[0] }) });
+                            zone && zone.forEach((el, i) => { obj_zone.push({ lat: el[1], log: el[0] }) });
                             return <Polyline key={"ivi-poly-detection-" + n} positions={obj_zone} color="#999999" weight={12} opacity={0.8} />
                         })
                     }
@@ -536,7 +536,7 @@ class MapTodo extends React.Component {
                         //Zone relevance with not added to DB
                         currentEventIvi && currentEventIvi.relevance_zones && currentEventIvi.relevance_zones.map((zone, n) => {
                             let obj_zone = [];
-                            zone && zone.forEach((el, i) => { obj_zone.push({ lat: el[1], lng: el[0] }) });
+                            zone && zone.forEach((el, i) => { obj_zone.push({ lat: el[1], log: el[0] }) });
                             return <Polyline key={"ivi-poly-relevance-" + n} positions={obj_zone} color="#CCCCCC" weight={12} opacity={0.8} />
                         })
                     }
@@ -546,7 +546,16 @@ class MapTodo extends React.Component {
                         </Chat>
                     </Control>
                    
-                    {ivi.map((objIvi, id) => <MarkerIvi objIvi={objIvi} key={`marker-ivi-${id}`} handleDelete={() => this.handleDeleteIvi(objIvi.id)} />)}
+                    {console.log(ivi),ivi.map((objIvi, nombre) => 
+                    objIvi.listaRutas.map((rutas, index) =>
+                    rutas.listaPuntos.map((puntos, index2)=>
+                    <MarkerIvi objIvi={puntos} key={`marker-ivi-${index2}`} handleDelete={() => this.handleDeleteIvi(puntos.nombre),console.log(puntos)} 
+                    
+                    />
+                    )
+                    )
+                   
+                    )}
 
                     </Map>
             </Col>

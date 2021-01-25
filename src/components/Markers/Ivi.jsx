@@ -1,6 +1,6 @@
 import React from "react";
 
-import img from '../../assets/img/logo.png'
+import icono from '../../assets/img/marker.png'
 
 //Leaflet
 import { Marker, Popup, Polyline } from 'react-leaflet'
@@ -34,21 +34,23 @@ class MarkerIvi extends React.Component {
     }
 
     render() {
-        const { objIvi } = this.state;
+        const { objIvi, puntos } = this.state;
 
         //If valid object
-        if (objIvi && objIvi.latitude && objIvi.long) {
+        if (puntos && puntos.latitude && puntos.long) {
 
             //Header pop up
             let title = "Ruta",
-                subimage = img;
+                subimage = icono;
                
             //Marker icon speed    
-            const markerSpeed = L.ExtraMarkers.Icon({
-                iconUrl: img,
+            const markerSpeed = L.icon({
+                iconUrl: icono,
                 markerColor: 'blue', prefix: 'fa',
                 iconSize: [30, 30],
                 iconAnchor: [15, 15],
+                
+                
             });
 
          
@@ -70,7 +72,7 @@ class MarkerIvi extends React.Component {
                     <Polyline positions={obj_detection} color="#FEB41C" weight={12} opacity={0.6} />
 
                     {/* Show marker */}
-                    <Marker position={[objIvi.latitude, objIvi.long]} icon={markerSpeed}>
+                    <Marker position={[puntos.lat, puntos.log]} icon={markerSpeed}>
 
                         {/* Show pop up */}
                         <Popup closeButton={false} >

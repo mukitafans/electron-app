@@ -11,10 +11,11 @@ import { Layout, Menu, Button, Drawer, Table, Badge, Dropdown, Icon } from 'antd
 
 import { authenticationService } from '../services/authentication.service.js';
 import reqwest from 'reqwest';
+//import ReactNestedTable from 'react-nested-table';
 
 
 
-const data = [{"id":"1", "nombre":"Irun","area":0.0,"listaRutas":[{"nombre":"Ruta1","transporte":"Piernas","tiempo":2892,"km_totales":1,"listaPuntos":[{"nombre":"Behobia","lat":43.34228621776414,"log":-1.7603850690135165,"area_total":132,"oculto":true,"tipo":"0","ruta":null,"listaPreguntas":[{"pregunta":"Quien es mas guapo de los tres","listaRespuestas":["DAbiz El tonto","Torron el zorrrroooooo","Iker Martinez Dios Supremo"],"respuesta_correcta":"2","puntuacion_pregunta":12}]}]},{"nombre":"Ruta 2","transporte":"nadando","tiempo":12,"km_totales":11,"listaPuntos":[{"nombre":"Olaberria","lat":43.32996446957748,"log":-1.78845516017538,"area_total":132,"oculto":true,"tipo":"2","ruta":null,"listaPreguntas":[{"pregunta":"Quien es mas guapo de los tres","listaRespuestas":["DAbiz El tonto","Torron el Torron","Iker Martinez Dios Supremo"],"respuesta_correcta":"2","puntuacion_pregunta":12}]}]}]},{"id":"2","nombre":"Hondarribia","area":0.0,"listaRutas":[{"nombre":"Ruta 3","transporte":"Piernas","tiempo":2892,"km_totales":1,"listaPuntos":[{"nombre":"Puerto","lat":43.38875433767975,"log":-1.7905649167319726,"area_total":132,"oculto":true,"tipo":"Pruebas","ruta":null,"listaPreguntas":[{"pregunta":"Quien es mas guapo de los tres","listaRespuestas":["DAbiz El tonto","Torron el zorrrroooooo","Iker Martinez Dios Supremo"],"respuesta_correcta":null,"puntuacion_pregunta":12}]},{"nombre":"Playa","lat":43.38066450417254,"log":-1.798228292332793,"area_total":132,"oculto":true,"tipo":"Pruebas","ruta":null,"listaPreguntas":[{"pregunta":"Quien tres","listaRespuestas":["DAbiz El tonto","Torron el Tonto","Iker Martinez Dios Supremo"],"respuesta_correcta":null,"puntuacion_pregunta":8}]}]},{"nombre":"Ruta 4","transporte":"nadando","tiempo":12,"km_totales":11,"listaPuntos":[{"nombre":"Golf","lat":43.33773609026295,"log":-1.8265911234099834,"area_total":132,"oculto":true,"tipo":"Pruebas","ruta":null,"listaPreguntas":[{"pregunta":"Quien es mas guapo de los tres","listaRespuestas":["DAbiz El tonto","Torron el Torron","Iker Martinez Dios Supremo"],"respuesta_correcta":null,"puntuacion_pregunta":12}]}]}]}]
+//const data = [{"id":"1", "nombre":"Irun","area":0.0,"listaRutas":[{"nombre":"Ruta1","transporte":"Piernas","tiempo":2892,"km_totales":1,"listaPuntos":[{"nombre":"Behobia","lat":43.34228621776414,"log":-1.7603850690135165,"area_total":132,"oculto":true,"tipo":"0","ruta":null,"listaPreguntas":[{"pregunta":"Quien es mas guapo de los tres","listaRespuestas":["DAbiz El tonto","Torron el zorrrroooooo","Iker Martinez Dios Supremo"],"respuesta_correcta":"2","puntuacion_pregunta":12}]}]},{"nombre":"Ruta 2","transporte":"nadando","tiempo":12,"km_totales":11,"listaPuntos":[{"nombre":"Olaberria","lat":43.32996446957748,"log":-1.78845516017538,"area_total":132,"oculto":true,"tipo":"2","ruta":null,"listaPreguntas":[{"pregunta":"Quien es mas guapo de los tres","listaRespuestas":["DAbiz El tonto","Torron el Torron","Iker Martinez Dios Supremo"],"respuesta_correcta":"2","puntuacion_pregunta":12}]}]}]},{"id":"2","nombre":"Hondarribia","area":0.0,"listaRutas":[{"nombre":"Ruta 3","transporte":"Piernas","tiempo":2892,"km_totales":1,"listaPuntos":[{"nombre":"Puerto","lat":43.38875433767975,"log":-1.7905649167319726,"area_total":132,"oculto":true,"tipo":"Pruebas","ruta":null,"listaPreguntas":[{"pregunta":"Quien es mas guapo de los tres","listaRespuestas":["DAbiz El tonto","Torron el zorrrroooooo","Iker Martinez Dios Supremo"],"respuesta_correcta":null,"puntuacion_pregunta":12}]},{"nombre":"Playa","lat":43.38066450417254,"log":-1.798228292332793,"area_total":132,"oculto":true,"tipo":"Pruebas","ruta":null,"listaPreguntas":[{"pregunta":"Quien tres","listaRespuestas":["DAbiz El tonto","Torron el Tonto","Iker Martinez Dios Supremo"],"respuesta_correcta":null,"puntuacion_pregunta":8}]}]},{"nombre":"Ruta 4","transporte":"nadando","tiempo":12,"km_totales":11,"listaPuntos":[{"nombre":"Golf","lat":43.33773609026295,"log":-1.8265911234099834,"area_total":132,"oculto":true,"tipo":"Pruebas","ruta":null,"listaPreguntas":[{"pregunta":"Quien es mas guapo de los tres","listaRespuestas":["DAbiz El tonto","Torron el Torron","Iker Martinez Dios Supremo"],"respuesta_correcta":null,"puntuacion_pregunta":12}]}]}]}]
 
 //LISTA PREGUNTAS SI ESTA NULL PETA
 
@@ -34,6 +35,31 @@ class CrudPreguntas extends Component{
         this.refreshCourses = this.refreshCourses.bind(this)
     }
     componentDidMount() {
+        
+        fetch = (data = {}) => {
+            console.log('datos:', data);
+            this.setState({ loading: true });
+            reqwest({
+                url: 'http://137.116.219.96:80/localizaciones/all',
+                method: 'get',
+                data: {
+                [{}]: 20,
+                ...data,
+                },
+                type: 'json',
+            }).then(data => {
+                const pagination = { ...this.state.pagination };
+                // Read total count from server
+                // pagination.total = data.totalCount;
+                pagination.total = 200;
+                console.log(data);
+                this.setState({
+                loading: false,
+                data: data,
+                pagination,
+                });
+            });
+        };
         this.refreshCourses();
     }
 
@@ -92,7 +118,11 @@ class CrudPreguntas extends Component{
 
 
     render(){
-        return <div>            
+        if (this.state.error) {
+            return <h1>Caught an error.</h1>
+          }
+        return <div> 
+                       
 
         {/*
         data.map((item, index)=>{
@@ -120,6 +150,7 @@ class CrudPreguntas extends Component{
     })
     */
 }
+
         <div className="container">
         <h3>Lista de rutas</h3>
         {this.state.message && <div class="alert alert-success">{this.state.message}</div>}
@@ -137,14 +168,16 @@ class CrudPreguntas extends Component{
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map(
+                    {this.state.data.map(
                             course =>
-                                <tr key={course.id}>
+                            
+                                <tr key={course.nombre}>
                                     <td>{course.id}</td>
                                     <td>{course.nombre}</td>
                                     <td>{course.area}</td>
-                                    {course.listaRutas.map((item, index) => 
-                                    <tr>
+                                    {course.listaRutas.map((item, index1) => 
+                                    
+                                    <tr key={index1}>
                                         <th>nombre de la ruta<td style={{color:'red'}}>{item.nombre}</td></th>
                                         
                                         <th>Transporte<td style={{color:'red'}}>{item.transporte}</td></th>
@@ -153,22 +186,27 @@ class CrudPreguntas extends Component{
                                         
                                         <th>km totales<td style={{color:'red'}}>{item.km_totales}</td></th>
                                         
-                                        <tr>                                        
-                                        {item.listaPuntos.map((punto, index) =>
-                                            <tr>
-                                                <td>{punto.nombre}</td>
-                                                <td>{punto.lat}</td>
-                                                <td>{punto.log}</td>
-                                            </tr>
+                                                                                
+                                        {item.listaPuntos.map((punto, index2) =>
+                                        
+                                        <div key={index2}>  
+                                            <td>{punto.nombre}</td>
+                                            <td>{punto.lat}</td>
+                                            <td>{punto.log}</td>
+                                        </div>    
+                                        
                                         )}
-                                        </tr>
+                                        
+                                        
                                     </tr>
+                                    
                                     
                                     )}
                                     
                                     <td><button className="btn btn-success" onClick={() => this.updateCourseClicked(course.id)}>Update</button></td>
                                     <td><button className="btn btn-warning" onClick={() => this.deleteCourseClicked(course.id)}>Delete</button></td>
                                 </tr>
+                                
                         )
                     }
                 </tbody>
@@ -178,6 +216,7 @@ class CrudPreguntas extends Component{
             </div>
         </div>
     </div>
+
         </div>
     
     }
