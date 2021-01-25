@@ -36,7 +36,7 @@ import Chat from "./Chat.jsx";
 import MarkerIvi from "./Markers/Ivi.jsx";
 import NewIvi from "./Modals/NewIvi.jsx";
 import PanelIvi from "./Panels/PanelIvi.jsx";
-
+import MarkerUsuarios from "./Markers/usuarios.jsx";
 
 const { Option } = Select;
 
@@ -96,6 +96,7 @@ class MapTodo extends React.Component {
         this.state = {
             //VARIABLES DEL STATE
             ivi: [],
+            usuarios: [],
             latLonClick: null, //lat, lng on map click
 
             //Map tile selected
@@ -131,25 +132,38 @@ class MapTodo extends React.Component {
     }
     //FUNCIONES APARTIR DE AQUI
 
-    componentDidMount() {
+    async componentDidMount() {
         //Get token to request
         //let objUser = JSON.parse(localStorage.getItem("currentUser"));
         //let token = (objUser && objUser.token) ? objUser.token : "";
-
+        console.log("pis")
         //Get all events
         fetch('http://137.116.219.96:80/localizaciones/all')
             .then(response => response.json())
             .then(
             (res) => { console.log({ivi: res})
-            this.setState({isLoaded: true, ivi: res });
+            this.setState({ ivi: res });
             },
             (error) => {
                 this.setState({
-                  isLoaded: true,
+                  
                   error
                 });
             }
         )
+        await fetch('http://137.116.219.96:80/usuarios/all')
+        .then(response => response.json())
+        .then(
+        (res2) => { console.log({usuarios: res2})
+        this.setState({ usuarios: res2 });
+        },
+        (error) => {
+            this.setState({
+              
+              error
+            });
+        }
+    )
         /*
         fetch(`http://137.116.219.96:80/localizaciones/all`)
         .then(res => res.json())
@@ -407,7 +421,7 @@ class MapTodo extends React.Component {
 
     //RENDER PARA LO VISUAL
     render() {
-        const { tile_map, position, zoom, ivi, currentEventIvi, visibleIvi } = this.state;
+        const { tile_map, position, zoom, ivi, currentEventIvi, visibleIvi, usuarios } = this.state;
         console.log(ivi)
         const markerIcon = L.icon({
             iconSize: [25, 41],
@@ -540,22 +554,27 @@ class MapTodo extends React.Component {
                             return <Polyline key={"ivi-poly-relevance-" + n} positions={obj_zone} color="#CCCCCC" weight={12} opacity={0.8} />
                         })
                     }
-
-                    <Control>
+                    {/**     <Control>
                         <Chat>
                         </Chat>
-                    </Control>
+                    </Control>*/}
+                
                    
-                    {console.log(ivi),ivi.map((objIvi, nombre) => 
+                    {ivi.map((objIvi, nombre) => 
                     objIvi.listaRutas.map((rutas, index) =>
                     rutas.listaPuntos.map((puntos, index2)=>
-                    <MarkerIvi objIvi={puntos} key={`marker-ivi-${index2}`} handleDelete={() => this.handleDeleteIvi(puntos.nombre),console.log(puntos)} 
+                    <MarkerIvi puntos={puntos} key={`marker-ivi-${index2}`} handleDelete={() => this.handleDeleteIvi(puntos.nombre),console.log(puntos)} 
                     
                     />
                     )
                     )
                    
                     )}
+                    {
+                        usuarios.map((objIvi, id) =>
+                        <MarkerUsuarios objIvi={objIvi} key={`marker-usu-${id}`} />
+                        )
+                    }
 
                     </Map>
             </Col>

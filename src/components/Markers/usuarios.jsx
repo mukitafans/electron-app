@@ -1,6 +1,6 @@
 import React from "react";
 
-import icono from '../../assets/img/marker.png'
+import icono from '../../assets/img/logo.png'
 
 //Leaflet
 import { Marker, Popup, Polyline } from 'react-leaflet'
@@ -44,7 +44,7 @@ class MarkerIvi extends React.Component {
         if (puntos && puntos.latitude && puntos.long) {
 
             //Header pop up
-            let title = "Ruta",
+            let title = "Usuario",
                 subimage = icono;
                
             //Marker icon speed    
