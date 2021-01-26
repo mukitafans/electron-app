@@ -221,10 +221,7 @@ class MapTodo extends React.Component {
         let objUser = JSON.parse(localStorage.getItem("currentUser"));
         let token = (objUser && objUser.token) ? objUser.token : "";
 
-        axios.post(globals.url_api + 'ivi_del',
-            { id: id },
-            { headers: { 'x-access-token': token } },
-        )
+        fetch('http://137.116.219.96:80/localizaciones/eliminarLocalizacion/'+id)
             .then(res => {
                 if (res.status === 200) {
                     const { ivi } = this.state;
@@ -281,19 +278,23 @@ class MapTodo extends React.Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
                 },
-            
+                //{"0":"una", "1":"dos", "2":"tres"}
                 body: JSON.stringify({
-                        "nombre":'Prueba4nocaso', "area":10,
-                        "listaRutas":[{"nombre":'pruebaruta1', "transporte":'pie',"km_totales":11, "tiempo":"5000",
-                        "listaPuntos":[{"nombre":'puntoPrueba1', "lat":currentEventIvi.latitude, "log":currentEventIvi.long, "tipo":"prueba", "oculto": true, "area_total":1000, "listaPreguntas":[]},
-                                        {"nombre":'puntoPrueba2', "lat":"46.33979", "log":"-1.78863", "tipo":"prueba", "oculto": true, "area_total":1000, "listaPreguntas":[]}]}
+                        "nombre":currentEventIvi.localizacion, "area":currentEventIvi.area,
+                        "listaRutas":[{"nombre":currentEventIvi.rutaNombre, "transporte":currentEventIvi.transporte,"km_totales":5, "tiempo":"5000",
+                        "listaPuntos":[{"nombre":'puntoPrueba1', "lat":currentEventIvi.lat, "log":currentEventIvi.log, "tipo":"prueba", "oculto": true, "area_total":1000, "ruta": JSON.stringify(currentEventIvi.rutas) ,"listaPreguntas":[{"pregunta":'¿unajeje?', "puntuacion_pregunta":20, "listaRespuestas":[]}]},
+                                        {"nombre":'puntoPrueba2', "lat":"46.73979", "log":"-1.78863", "tipo":"prueba", "oculto": true, "area_total":1000, "listaPreguntas":[{"pregunta":'¿unajeje?', "puntuacion_pregunta":20, "listaRespuestas":[]}]}]}
                                     ],
                         })
             })
-            .then((response) =>response.json())
+            .then((response) =>{
+                response.json()
+                this.setState({ ivi, visibleIvi: false, clickMapStatus: null, newTraceDenmStart: null, currentEventIvi: null, customCur: "" });
+               })
             .then((responseJson)=>{ 
             //console the response 
                 console.log('response', responseJson);
+                this.setState({ ivi, visibleIvi: false, clickMapStatus: null, newTraceDenmStart: null, currentEventIvi: null, customCur: "" });
                 })
             .catch((error)=> {
                 console.log('error', error);
@@ -311,8 +312,6 @@ class MapTodo extends React.Component {
                 return;
             }
 
-            
-
             const { ivi, latLonClick } = this.state;
 
             let objUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -320,7 +319,7 @@ class MapTodo extends React.Component {
 
             //If not need traces
             if (!values.traces) {
-                let data = {nombre: 'irun', listaRutas: [{nombre: 'Ruta99', listaPuntos:[]}]}
+                //let data = {nombre: 'irun', listaRutas: [{nombre: 'Ruta99', listaPuntos:[]}]}
                 /*axios.post(globals.url_api + 'ivi', {
                     spm: values.speed_limit,
                     lat: latLonClick.lat,
@@ -345,10 +344,8 @@ class MapTodo extends React.Component {
                     },
                 
                     body: JSON.stringify({
-                            "jsonrpc":"2.0",
-                            "method":"call",
-                            "params":{"nombre":"donosti"},
-                            "id":844267375})
+                        lat: latLonClick.lat,
+                        lon: latLonClick.lng})
                 })
                 .then((response) =>response.json())
                 .then((responseJson)=>{ 
@@ -362,10 +359,15 @@ class MapTodo extends React.Component {
                 this.setState({
                     currentEventIvi: {
                         spm: values.speed_limit,
-                    
-                        latitude: latLonClick.lat,
-                        long: latLonClick.lng,
-                        detection_zones: []
+                        localizacion: values.localizacion,
+                        area: values.area,
+                        rutaNombre: values.rutaNombre,
+                        transporte: values.transporte,
+                        puntoNombre: values.puntoNombre,
+                        
+                        lat: latLonClick.lat,
+                        log: latLonClick.lng,
+                        rutas: []
                        // relevance_zones: []
                     },
                     visibleIvi: false,
@@ -386,21 +388,19 @@ class MapTodo extends React.Component {
           console.log('mal')
         }
         else if (clickMapStatus === "detection") {
-            let insideParking = PointInPolygon([currentEventIvi.latitude, currentEventIvi.long], polygonZone)
+            let insideParking = PointInPolygon([currentEventIvi.lat, currentEventIvi.log], polygonZone)
 
             if (insideParking) {
-                //AQUI ENEKO
-                //let points = routingService.getRouteParking(currentEventIvi.latitude, currentEventIvi.long, e.latlng.lat, e.latlng.lng);
                 let points = routingService.getRouteParkingTrackAlfon(currentEventIvi.latitude, currentEventIvi.long, e.latlng.lat, e.latlng.lng);
 
                 currentEventIvi.detection_zones.push(points);
             
                 this.setState({ currentEventIvi });
             } else {
-
-                routingService.getRoute(e.latlng.lat, e.latlng.lng, currentEventIvi.latitude, currentEventIvi.long)
+                //console.log(e.latLonClick.lat, e.latLonClick.lng)
+                routingService.getRoute(e.latlng.lat, e.latlng.lng, currentEventIvi.lat, currentEventIvi.log)
                     .then(response => {
-                        currentEventIvi.detection_zones.push(response.array);
+                        currentEventIvi.rutas.push(response.array);
                         if (response) this.setState({ currentEventIvi });
                     });
             }
@@ -415,13 +415,13 @@ class MapTodo extends React.Component {
     //remove ivi detection none
     removeZoneDetection = (i) => {
         let currentEventIvi = this.state.currentEventIvi;
-        if (currentEventIvi && currentEventIvi.detection_zones && currentEventIvi.detection_zones[i]) currentEventIvi.detection_zones.splice(i, 1);
+        if (currentEventIvi && currentEventIvi.rutas && currentEventIvi.rutas[i]) currentEventIvi.rutas.splice(i, 1);
         this.setState({ currentEventIvi });
     }
 
     //RENDER PARA LO VISUAL
     render() {
-        const { tile_map, position, zoom, ivi, currentEventIvi, visibleIvi, usuarios } = this.state;
+        const { tile_map, position, zoom, ivi, currentEventIvi, visibleIvi, usuarios, customCur } = this.state;
         console.log(ivi)
         
         return (
@@ -476,7 +476,7 @@ class MapTodo extends React.Component {
                             callback: this.zoomOut
                         }
                     ]}
-                    //className={customCur}
+                    className={customCur}
                     ref={map => this.map = map}
                 >
 
@@ -532,9 +532,9 @@ class MapTodo extends React.Component {
                     }
                       {
                         //Zone detection with not added to DB
-                        currentEventIvi && currentEventIvi.detection_zones && currentEventIvi.detection_zones.map((zone, n) => {
+                        currentEventIvi && currentEventIvi.rutas && currentEventIvi.rutas.map((zone, n) => {
                             let obj_zone = [];
-                            zone && zone.forEach((el, i) => { obj_zone.push({ lat: el[1], log: el[0] }) });
+                            zone && zone.forEach((el, i) => { obj_zone.push({ lat: el[1], lng: el[0] }) });
                             return <Polyline key={"ivi-poly-detection-" + n} positions={obj_zone} color="#999999" weight={12} opacity={0.8} />
                         })
                     }
@@ -556,9 +556,12 @@ class MapTodo extends React.Component {
                     {ivi.map((objIvi, nombre) => 
                     objIvi.listaRutas.map((rutas, index) =>
                     rutas.listaPuntos.map((puntos, index2)=>
-                    <MarkerIvi puntos={puntos} key={`marker-ivi-${index2}`} handleDelete={() => this.handleDeleteIvi(puntos.nombre),console.log(puntos)} 
+                    puntos.listaPreguntas.map((preguntas, index3)=>
+                    <MarkerIvi preguntas={preguntas} puntos={puntos} objIvi={objIvi} rutas={rutas} key={`marker-ivi-${index2}`} handleDelete={() => this.handleDeleteIvi(puntos.nombre),console.log(puntos)} 
                     
                     />
+                    )
+                   
                     )
                     )
                    

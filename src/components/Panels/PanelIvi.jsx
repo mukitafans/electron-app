@@ -26,7 +26,7 @@ class PanelIvi extends React.Component {
     render() {
         const { objIvi } = this.state
 
-        if (objIvi && objIvi.latitude && objIvi.long) {
+        if (objIvi && objIvi.lat && objIvi.log) {
 
             let title = "Insercion de ruta",
                 subimage = img;
@@ -42,19 +42,39 @@ class PanelIvi extends React.Component {
                     />
                     <Divider />
                     <Row gutter={[16, 8]}>
-                        <Col className="col_text" span={24}>
-                           
+                      
+                        <Col className="col_text" span={8}>
+                        <span className="col_label">{"Localizacion: "}</span>
+                            {objIvi.localizacion}
+                            
                         </Col>
-                        <Col className="col_text" span={24}>
+                        <Col className="col_text" span={8}>
+                        <span className="col_label">{"Area: "}</span>
+                            {objIvi.area}
+                            
+                        </Col>
+                        <Col className="col_text" span={8}>
+                        <span className="col_label">{"Nombre ruta: "}</span>
+                            {objIvi.rutaNombre}
+                            
+                        </Col>
+                        <Col className="col_text" span={8}>
+                        <span className="col_label">{"Transporte: "}</span>
+                            {objIvi.transporte}
+                            
+                        </Col>
+                        <Col className="col_text" span={8}>
+                        <span className="col_label">{"Nombre punto: "}</span>
+                            {objIvi.puntoNombre}
                             
                         </Col>
                         <Col className="col_text" span={12}>
                             <span className="col_label">{"Lat: "}</span>
-                            {objIvi.latitude && objIvi.latitude.toFixed(5)}
+                            {objIvi.lat && objIvi.lat.toFixed(5)}
                         </Col>
                         <Col className="col_text" span={12}>
                             <span className="col_label">{"Lon: "}</span>
-                            {objIvi.long && objIvi.long.toFixed(5)}
+                            {objIvi.log && objIvi.log.toFixed(5)}
                         </Col>
                     </Row>
                     <Divider />
@@ -74,9 +94,9 @@ class PanelIvi extends React.Component {
                         <Col className="col_text" span={24}>
                             <List
                                 size="small"
-                                header={<div>Detection Zones</div>}
+                                header={<div>Rutas</div>}
                                 bordered
-                                dataSource={objIvi.detection_zones}
+                                dataSource={objIvi.rutas}
                                 renderItem={(_, i) => <List.Item actions={[<span key={"list-zone-det-delete" + i}><Icon type="delete" onClick={() => this.props.removeZoneDetection(i)} style={{ fontSize: '16px', color: '#ff7875' }} /></span>]}>{"Zone detection " + (i + 1)}</List.Item>}
                             />
                         </Col>

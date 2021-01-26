@@ -18,13 +18,14 @@ class MarkerIvi extends React.Component {
         super(props);
         this.state = {
             objIvi: null,
+            rutas: null,
             puntos: null
         };
     }
 
     //Get Ivi
     componentDidMount() {
-        this.setState({ objIvi: this.props.objIvi, puntos: this.props.puntos });
+        this.setState({ objIvi: this.props.objIvi, puntos: this.props.puntos, rutas: this.props.rutas });
     }
 
     //On change Ivi
@@ -35,10 +36,13 @@ class MarkerIvi extends React.Component {
         if (this.props.puntos !== prevProps.puntos) {
             this.setState({ puntos: this.props.puntos });
         }
+        if (this.props.rutas !== prevProps.rutas) {
+            this.setState({ rutas: this.props.rutas });
+        }
     }
 
     render() {
-        const { objIvi, puntos } = this.state;
+        const { objIvi, puntos, rutas } = this.state;
 
         //If valid object
         if (puntos && puntos.lat && puntos.log) {
@@ -59,22 +63,23 @@ class MarkerIvi extends React.Component {
 
          
 
-            //Detection data demomento nah
-            /*
-            let detection_array = JSON.parse(objIvi.detection_points);
+            //Detection data demomento nah cambiar con rutas
+
+            
+            let detection_array = JSON.parse(puntos.ruta);
             let obj_detection = [];
             detection_array && detection_array.forEach(array => {
                 let newObj = [];
                 array.forEach(el => {
-                    newObj.push({ lat: el[1], log: el[0] })
+                    newObj.push({ lat: el[1], lng: el[0] })
                 });
                 obj_detection.push(newObj);
-            });*/
+            });
 
             return (
                 <div>
-                    {/* Show traces detection and relevance 
-                    <Polyline positions={obj_detection} color="#FEB41C" weight={12} opacity={0.6} />*/}
+                    {/* Show traces detection and relevance */}
+                    <Polyline positions={obj_detection} color="#FEB41C" weight={12} opacity={0.6} />
 
                     {/* Show marker */}
                     <Marker position={[puntos.lat, puntos.log]} icon={markerSpeed}>
@@ -101,16 +106,24 @@ class MarkerIvi extends React.Component {
                                     <Col className="col_text" span={24}>
                                         <span className="col_label">{"Valid to: "}</span>
                                         {moment(parseInt(objIvi.valid_to) * 1000).format("YYYY/MM/DD HH:mm:ss")}
+                                    </Col>*/}
+                                    <Col className="col_text" span={24}>
+                                        <span className="col_label">{"Localizacion: "}</span>
+                                        {objIvi.nombre}
                                     </Col>
+                                    <Col className="col_text" span={24}>
+                                        <span className="col_label">{"Nombre ruta: "}</span>
+                                        {rutas.nombre}
+                                    </Col>
+                                    <Col className="col_text" span={24}>
+                                        <span className="col_label">{"Transporte: "}</span>
+                                        {rutas.transporte}
+                                    </Col> 
                                     <Col className="col_text" span={12}>
-                                        <span className="col_label">{"Lat: "}</span>
-                                        {objIvi.latitude && objIvi.latitude.toFixed(5)}
+                                        <span className="col_label">{"Area total: "}</span>
+                                        {puntos.area_total && puntos.area_total.toFixed(5)}
                                     </Col>
-                                    <Col className="col_text" span={12}>
-                                        <span className="col_label">{"Lon: "}</span>
-                                        {objIvi.long && objIvi.long.toFixed(5)}
-                                    </Col>
-                                    */}
+                                   
                                     
                                 </Row>
                                 <Divider />
