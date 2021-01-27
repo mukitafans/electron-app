@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 const INSTRUCTOR = 'in28minutes'
-const COURSE_API_URL = 'http://localhost:8080' //cambiar a IP
-const INSTRUCTOR_API_URL = `${COURSE_API_URL}/instructors/${INSTRUCTOR}`
+const COURSE_API_URL = 'http://137.116.219.96:80' //cambiar a IP
+const INSTRUCTOR_API_URL = `${COURSE_API_URL}/localizaciones/`
 
 class CourseDataService {
 
@@ -23,7 +23,7 @@ class CourseDataService {
 
     updateCourse(name, id, course) {
         //console.log('executed service')
-        return axios.put(`${INSTRUCTOR_API_URL}/courses/${id}`, course);
+        return axios.put(`${INSTRUCTOR_API_URL}/editarLocalizacion/${id}`, course);
     }
 
     createCourse(name, course) {

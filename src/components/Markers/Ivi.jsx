@@ -36,6 +36,7 @@ class MarkerIvi extends React.Component {
         if (this.props.puntos !== prevProps.puntos) {
             this.setState({ puntos: this.props.puntos });
         }
+        
         if (this.props.rutas !== prevProps.rutas) {
             this.setState({ rutas: this.props.rutas });
         }
@@ -62,10 +63,7 @@ class MarkerIvi extends React.Component {
             });
 
          
-
-            //Detection data demomento nah cambiar con rutas
-
-            
+            //Detection data            
             let detection_array = JSON.parse(puntos.ruta);
             let obj_detection = [];
             detection_array && detection_array.forEach(array => {

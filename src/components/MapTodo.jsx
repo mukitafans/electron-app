@@ -35,7 +35,9 @@ import { routingService } from '../services/routing.service.js';
 import Chat from "./Chat.jsx";
 import MarkerIvi from "./Markers/Ivi.jsx";
 import NewIvi from "./Modals/NewIvi.jsx";
+//import NewIvi2 from "./Modals/NewIviPunto.jsx";
 import PanelIvi from "./Panels/PanelIvi.jsx";
+//import PanelIvi2 from "./Panels/PanelIviPunto.jsx";
 import MarkerUsuarios from "./Markers/usuarios.jsx";
 
 const { Option } = Select;
@@ -216,29 +218,35 @@ class MapTodo extends React.Component {
     centerMap = (e) => this.setState({ position: [e.latlng.lat, e.latlng.lng] });
 
     //PARA BORRAR PUNTOS + RUTAS
-     //Send request to delete Ivi
-     handleDeleteIvi = (id) => {
-        let objUser = JSON.parse(localStorage.getItem("currentUser"));
-        let token = (objUser && objUser.token) ? objUser.token : "";
-
-        fetch('http://137.116.219.96:80/localizaciones/eliminarLocalizacion/'+id)
+    //Send request to delete Ivi
+    handleDeleteIvi = (nombre) => {
+    let objUser = JSON.parse(localStorage.getItem("currentUser"));
+    let token = (objUser && objUser.token) ? objUser.token : "";
+    console.log("SE INTENTA BORRAR?")
+        fetch(`http://137.116.219.96:80/localizaciones/eliminarLocalizacion/${nombre}`, {
+            method: 'DELETE',
+            })
+            .then(console.log("SE INTENTA BORRAR?"))
             .then(res => {
                 if (res.status === 200) {
                     const { ivi } = this.state;
-                    let newMarkers = ivi.filter(obj => obj.id !== id);
+                    let newMarkers = ivi.filter(obj => obj.nombre !== nombre);
                     this.map.leafletElement.closePopup();
                     this.setState({ ivi: newMarkers });
                 }
             })
+            .then(console.log(nombre))
             .catch(err => console.log("error", err));
     };
 
     //GUARDAR FORM 
     //Save form IVI
     saveFormRefIvi = formRef => this.formRefIvi = formRef;
+    //saveFormRefIvi2 = formRef => this.formRefIvi = formRef;
 
     //Abrir formulario para añadir ruta
     openIviModal = (e) => this.setState({ visibleIvi: true, latLonClick: e.latlng });
+    //openIviModal2 = (e) => this.setState({ visibleIvi2: true, latLonClick: e.latlng });
     handleCancelIvi = () => {
         this.setState({ visibleIvi: false });
         const { form } = this.formRefIvi.props;
@@ -252,57 +260,49 @@ class MapTodo extends React.Component {
 
         let objUser = JSON.parse(localStorage.getItem("currentUser"));
         let token = (objUser && objUser.token) ? objUser.token : "";
+     
         /*
-        axios.post(globals.url_api + 'ivi', {
-            spm: currentEventIvi.spm,
-            lat: currentEventIvi.latitude,
-            lon: currentEventIvi.long,
-            valid_from: currentEventIvi.valid_from,
-            valid_to: currentEventIvi.valid_to,
-            cause_code: currentEventIvi.cause_code,
-            //relevance_points: JSON.stringify(currentEventIvi.relevance_zones),
-            detection_points: JSON.stringify(currentEventIvi.detection_zones)
-        }, {
-            headers: { 'x-access-token': token },
-        })
-            .then(res => {
-                if (res.status === 201) {
-                    ivi.push(res.data.ivi);
-                    this.setState({ ivi, visibleDenm: false, clickMapStatus: null, newTraceDenmStart: null, currentEventIvi: null, customCur: "" });
-                }
-            })
-            .catch(err => console.log("error", err));*/
+            body: JSON.stringify({
+                        "nombre":"uno", "area":10,
+                        "listaRutas":[{"nombre":"asdasd", "transporte":"asdasdsad","km_totales":5, "tiempo":"5000",
+                        "listaPuntos":[{"nombre":'puntoPrueba1', "lat":"46.73979", "log":"-1.78863", "tipo":"prueba", "oculto": true, "area_total":1000 ,"listaPreguntas":[]},
+                                        {"nombre":'puntoPrueba2', "lat":"46.73979", "log":"-1.78863", "tipo":"prueba", "oculto": true, "area_total":1000, "listaPreguntas":[]}]}
+                                    ],
+                        })
+        */
             fetch('http://137.116.219.96:80/localizaciones/nuevaLocalizacion', {
                 method: 'POST',
                 headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
                 },
-                //{"0":"una", "1":"dos", "2":"tres"}
+                //{"0":"una", "1":"dos", "2":"tres"} 'JAJAJA', 'JOJOJO', 'JUJUJU' "respuesta_correcta":'1'
                 body: JSON.stringify({
                         "nombre":currentEventIvi.localizacion, "area":currentEventIvi.area,
                         "listaRutas":[{"nombre":currentEventIvi.rutaNombre, "transporte":currentEventIvi.transporte,"km_totales":5, "tiempo":"5000",
-                        "listaPuntos":[{"nombre":'puntoPrueba1', "lat":currentEventIvi.lat, "log":currentEventIvi.log, "tipo":"prueba", "oculto": true, "area_total":1000, "ruta": JSON.stringify(currentEventIvi.rutas) ,"listaPreguntas":[{"pregunta":'¿unajeje?', "puntuacion_pregunta":20, "listaRespuestas":[]}]},
-                                        {"nombre":'puntoPrueba2', "lat":"46.73979", "log":"-1.78863", "tipo":"prueba", "oculto": true, "area_total":1000, "listaPreguntas":[{"pregunta":'¿unajeje?', "puntuacion_pregunta":20, "listaRespuestas":[]}]}]}
+                        "listaPuntos":[{"nombre":currentEventIvi.puntoNombre, "lat":currentEventIvi.lat, "log":currentEventIvi.log, "tipo":"prueba", "oculto": true, "area_total":1000, "ruta": JSON.stringify(currentEventIvi.rutas) ,"listaPreguntas":[{"pregunta":'¿unajeje?', "puntuacion_pregunta":20,  "listaRespuestas":[]}]},
+                                        {"nombre":'puntoPrueba2', "lat":"46.73979", "log":"-1.78863", "tipo":"prueba", "oculto": true, "area_total":1000, "listaPreguntas":[{"pregunta":'¿unajeje?', "puntuacion_pregunta":20,  "listaRespuestas":[]}]}]}
                                     ],
                         })
+                
             })
             .then((response) =>{
                 response.json()
+                console.log('response', response);
                 this.setState({ ivi, visibleIvi: false, clickMapStatus: null, newTraceDenmStart: null, currentEventIvi: null, customCur: "" });
                })
             .then((responseJson)=>{ 
             //console the response 
-                console.log('response', responseJson);
+                console.log('responsejson', responseJson);
                 this.setState({ ivi, visibleIvi: false, clickMapStatus: null, newTraceDenmStart: null, currentEventIvi: null, customCur: "" });
                 })
             .catch((error)=> {
                 console.log('error', error);
             });
     };
-
+   
     //On cancel in Zones panel
-    handleCancelWithZones = () => this.setState({ visibleDenm: false, visibleDenm2: false, visibleIvi: false, visibleIvi2: false,clickMapStatus: null, newTraceDenmStart: null, currentEventDenm: null, currentEventIvi: null, customCur: "" });
+    handleCancelWithZones = () => this.setState({ visibleDenm: false, visibleDenm2: false, visibleIvi: false,clickMapStatus: null, newTraceDenmStart: null, currentEventDenm: null, currentEventIvi: null, customCur: "" });
 
     //On accept denm modal (Send request or open add traces mode)
     handleCreateIvi = () => {
@@ -319,23 +319,7 @@ class MapTodo extends React.Component {
 
             //If not need traces
             if (!values.traces) {
-                //let data = {nombre: 'irun', listaRutas: [{nombre: 'Ruta99', listaPuntos:[]}]}
-                /*axios.post(globals.url_api + 'ivi', {
-                    spm: values.speed_limit,
-                    lat: latLonClick.lat,
-                    lon: latLonClick.lng
-                  
-                }, {
-                    headers: { 'x-access-token': token },
-                })
-                    .then(res => {
-                        if (res.status === 201) {
-                            ivi.push(res.data.ivi);
-                            this.setState({ ivi, visibleIvi: false });
-                            form.resetFields();
-                        }
-                    })
-                    .catch(err => console.log("error", err));*/
+              
                 fetch('http://137.116.219.96:80/localizaciones/nuevaLocalizacion', {
                     method: 'POST',
                     headers: {
@@ -380,6 +364,7 @@ class MapTodo extends React.Component {
             form.resetFields();
         });
     };
+    
     //To add new zone in denm and relevation or detection in ivi
     handleNewZone = (e) => {
         let { clickMapStatus, newTraceDenmStart, currentEventDenm, currentEventIvi } = this.state;
@@ -421,7 +406,7 @@ class MapTodo extends React.Component {
 
     //RENDER PARA LO VISUAL
     render() {
-        const { tile_map, position, zoom, ivi, currentEventIvi, visibleIvi, usuarios, customCur } = this.state;
+        const { tile_map, position, zoom, ivi, currentEventIvi, visibleIvi,  usuarios, customCur } = this.state;
         console.log(ivi)
         
         return (
@@ -438,6 +423,7 @@ class MapTodo extends React.Component {
                     onCancel={this.handleCancelIvi}
                     onCreate={this.handleCreateIvi}
                 />
+         
             
 
                 {/*Map object*/}
@@ -457,14 +443,14 @@ class MapTodo extends React.Component {
                             text: 'Insertar ruta',
                             icon: icono,
                             callback: (e) => this.openIviModal(e),
-                            //hideOnSelect: true
+                            hideOnSelect: true
                             
                         },
                         {
                             text: 'Insertar punto',
                             icon: icono,
-                            callback: (e) => this.openIviModal(e),
-                            //hideOnSelect: true
+                            callback: (e) => this.openIviModal2(e),
+                            hideOnSelect: true
                             
                         },'-', {
                             text: 'Zoom in',
@@ -491,6 +477,7 @@ class MapTodo extends React.Component {
                             removeZoneDetection={(i) => this.removeZoneDetection(i)}
                         />
                     </Control>
+                  
                     <ZoomControl position="topright" />
                     <TileLayer
                         url={tile_map}
@@ -557,7 +544,7 @@ class MapTodo extends React.Component {
                     objIvi.listaRutas.map((rutas, index) =>
                     rutas.listaPuntos.map((puntos, index2)=>
                     puntos.listaPreguntas.map((preguntas, index3)=>
-                    <MarkerIvi preguntas={preguntas} puntos={puntos} objIvi={objIvi} rutas={rutas} key={`marker-ivi-${index2}`} handleDelete={() => this.handleDeleteIvi(puntos.nombre),console.log(puntos)} 
+                    <MarkerIvi preguntas={preguntas}  objIvi={objIvi} rutas={rutas} puntos={puntos} key={`marker-ivi-${nombre}`} handleDelete={() => this.handleDeleteIvi(objIvi.nombre)} 
                     
                     />
                     )

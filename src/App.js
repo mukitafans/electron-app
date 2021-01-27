@@ -10,7 +10,6 @@ import localizaciones from './components/CrudLocalizaciones';
 import preguntas from './components/CrudPreguntas';
 import usuarios from './components/CrudUsuarios';
 import ranking from './components/CrudRanking';
-
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 
