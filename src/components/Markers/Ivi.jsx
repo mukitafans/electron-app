@@ -63,7 +63,8 @@ class MarkerIvi extends React.Component {
             });
 
          
-            //Detection data            
+            //Detection data 
+                      
             let detection_array = JSON.parse(puntos.ruta);
             let obj_detection = [];
             detection_array && detection_array.forEach(array => {

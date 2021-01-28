@@ -35,9 +35,9 @@ import { routingService } from '../services/routing.service.js';
 import Chat from "./Chat.jsx";
 import MarkerIvi from "./Markers/Ivi.jsx";
 import NewIvi from "./Modals/NewIvi.jsx";
-//import NewIvi2 from "./Modals/NewIviPunto.jsx";
+import NewDenm from "./Modals/NewIviPunto.jsx";
 import PanelIvi from "./Panels/PanelIvi.jsx";
-//import PanelIvi2 from "./Panels/PanelIviPunto.jsx";
+import PanelDenm from "./Panels/PanelIviPunto.jsx";
 import MarkerUsuarios from "./Markers/usuarios.jsx";
 
 const { Option } = Select;
@@ -92,6 +92,7 @@ const map_tiles = [
 //Function to select Tile
 const getLabelOfTile = (value) => map_tiles.find(obj => obj.value === value).label || "Open Street Maps";
 
+
 class MapTodo extends React.Component {
     constructor(props) {
         super(props);
@@ -127,7 +128,8 @@ class MapTodo extends React.Component {
             placement: 'left', 
 
 
-            visibleIvi: false
+            visibleIvi: false,
+            visibleDenm: false
 
 
         };
@@ -166,15 +168,6 @@ class MapTodo extends React.Component {
             });
         }
     )
-        /*
-        fetch(`http://137.116.219.96:80/localizaciones/all`)
-        .then(res => res.json())
-        .then(
-            (result)=>{
-                console.log(result)
-            }
-        )*/
-            
     }
 
     //Change Tile map in moment and save in local storage
@@ -240,16 +233,23 @@ class MapTodo extends React.Component {
     };
 
     //GUARDAR FORM 
+    saveFormRef = formRef => this.formRef = formRef;
     //Save form IVI
     saveFormRefIvi = formRef => this.formRefIvi = formRef;
     //saveFormRefIvi2 = formRef => this.formRefIvi = formRef;
 
     //Abrir formulario para añadir ruta
     openIviModal = (e) => this.setState({ visibleIvi: true, latLonClick: e.latlng });
+    openDenmModal = (e) => this.setState({ visibleDenm: true, latLonClick: e.latlng })
     //openIviModal2 = (e) => this.setState({ visibleIvi2: true, latLonClick: e.latlng });
     handleCancelIvi = () => {
         this.setState({ visibleIvi: false });
         const { form } = this.formRefIvi.props;
+        form.resetFields();
+    };
+    handleCancelDenm = () => {
+        this.setState({ visibleDenm: false });
+        const { form } = this.formRef.props;
         form.resetFields();
     };
 
@@ -278,7 +278,7 @@ class MapTodo extends React.Component {
                 },
                 //{"0":"una", "1":"dos", "2":"tres"} 'JAJAJA', 'JOJOJO', 'JUJUJU' "respuesta_correcta":'1'
                 body: JSON.stringify({
-                        "nombre":currentEventIvi.localizacion, "area":currentEventIvi.area,
+                        "nombre":currentEventIvi.localizacion, "area":0,
                         "listaRutas":[{"nombre":currentEventIvi.rutaNombre, "transporte":currentEventIvi.transporte,"km_totales":5, "tiempo":"5000",
                         "listaPuntos":[{"nombre":currentEventIvi.puntoNombre, "lat":currentEventIvi.lat, "log":currentEventIvi.log, "tipo":"prueba", "oculto": true, "area_total":1000, "ruta": JSON.stringify(currentEventIvi.rutas) ,"listaPreguntas":[{"pregunta":'¿unajeje?', "puntuacion_pregunta":20,  "listaRespuestas":[]}]},
                                         {"nombre":'puntoPrueba2', "lat":"46.73979", "log":"-1.78863", "tipo":"prueba", "oculto": true, "area_total":1000, "listaPreguntas":[{"pregunta":'¿unajeje?', "puntuacion_pregunta":20,  "listaRespuestas":[]}]}]}
@@ -300,10 +300,110 @@ class MapTodo extends React.Component {
                 console.log('error', error);
             });
     };
+    
    
     //On cancel in Zones panel
     handleCancelWithZones = () => this.setState({ visibleDenm: false, visibleDenm2: false, visibleIvi: false,clickMapStatus: null, newTraceDenmStart: null, currentEventDenm: null, currentEventIvi: null, customCur: "" });
+    handleCreateDenm = () => {
+        const { form } = this.formRef.props;
+        form.validateFields((err, values) => {
+            if (err) {
+                return;
+            }
 
+            const { denm, latLonClick, denm_cause_code } = this.state;
+
+            //Get token
+            let objUser = JSON.parse(localStorage.getItem("currentUser"));
+            let token = (objUser && objUser.token) ? objUser.token : "";
+
+            //If not require traces, send request
+            if (!values.traces) {
+              console.log("SIN TRAZAS, ACTIVA EL CURSOS")
+            } else {
+                //To get traces
+                console.log(values.rutaNombre.value)
+                this.setState({
+                    currentEventDenm: {
+                       // cause_code: denm_cause_code,
+                       // relevance_distance: values.relevanceDistance,
+                       // relevance_traffic_direction: values.relevanceTrafficDirection,
+                       /* subcause_code: values.subCauseCode,
+                       spm: values.speed_limit,
+                       localizacion: values.localizacion,
+                       area: values.area,
+                       rutaNombre: values.rutaNombre,
+                       transporte: values.transporte,
+                       puntoNombre: values.puntoNombre,*/
+                        localizacion: values.localizacion.value,
+                        rutaNombre: values.rutaNombre.value,
+                        transporte: values.transporte,
+                        puntoNombre: values.puntoNombre,
+                        lat: latLonClick.lat,
+                        log: latLonClick.lng,
+                        rutas: []
+                    },
+                    visibleDenm: false,
+                    clickMapStatus: "denm",
+                    customCur: "add-start-zone-cur"
+                })
+            }
+            //Reset form
+            form.resetFields();
+            
+        });
+    };
+    //On add denm in Zones panel
+    handleCreateDenmWithZones = () => {
+        let { currentEventDenm, denm } = this.state;
+        if (!currentEventDenm) return;
+
+        let objUser = JSON.parse(localStorage.getItem("currentUser"));
+        let token = (objUser && objUser.token) ? objUser.token : "";
+        console.log(this.state.currentEventDenm.localizacion)
+        fetch(`http://137.116.219.96:80/puntos/nuevoPunto/${this.state.currentEventDenm.localizacion}/${this.state.currentEventDenm.rutaNombre}`, {
+            method: 'POST',
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+            //{"0":"una", "1":"dos", "2":"tres"} 'JAJAJA', 'JOJOJO', 'JUJUJU' "respuesta_correcta":'1'
+            body: JSON.stringify({
+                
+                        "nombre": currentEventDenm.puntoNombre,
+                        "lat": currentEventDenm.lat,
+                        "log": currentEventDenm.log,
+                        "area_total": 132,
+                        "oculto": true,
+                        "tipo": "Pruebas",
+                        "ruta": null,
+                        "listaPreguntas": [
+                            {
+                                "pregunta": "Quien tres",
+                                "listaRespuestas": [
+                                    "DAbiz El tonto",
+                                    "Torron el Tonto",
+                                    "Iker Martinez Dios Supremo"
+                                ],
+                                "respuesta_correcta": null,
+                                "puntuacion_pregunta": 8
+                            }
+                        ]
+                    })
+            
+        })
+        .then((response) =>{
+            response.json()
+            console.log('response', response);
+            this.setState({ denm, visibleIvi: false, visibleDenm: false, clickMapStatus: null, newTraceDenmStart: null, currentEventIvi: null, customCur: "" });
+           })
+        .then((responseJson)=>{ 
+        //console the response 
+            console.log('responsejson', responseJson);
+            this.setState({ denm, visibleDenm: false, clickMapStatus: null, newTraceDenmStart: null, currentEventIvi: null, customCur: "" });
+            })
+            .catch(err => console.log("error", err));
+    };
     //On accept denm modal (Send request or open add traces mode)
     handleCreateIvi = () => {
         const { form } = this.formRefIvi.props;
@@ -370,7 +470,18 @@ class MapTodo extends React.Component {
         let { clickMapStatus, newTraceDenmStart, currentEventDenm, currentEventIvi } = this.state;
         if (!clickMapStatus) return;
         if (clickMapStatus === "denm") {
-          console.log('mal')
+            if (!newTraceDenmStart) {
+                this.setState({ newTraceDenmStart: e.latlng, customCur: "add-end-zone-cur" })
+            } else {
+                
+
+                routingService.getRoute(newTraceDenmStart.lat, newTraceDenmStart.lng, e.latlng.lat, e.latlng.lng)
+                    .then(response => {
+                        currentEventDenm.rutas.push(response.array);
+                        if (response) this.setState({ currentEventDenm, newTraceDenmStart: null, customCur: "add-start-zone-cur" });
+                    });
+                
+            }
         }
         else if (clickMapStatus === "detection") {
             let insideParking = PointInPolygon([currentEventIvi.lat, currentEventIvi.log], polygonZone)
@@ -388,6 +499,8 @@ class MapTodo extends React.Component {
                         currentEventIvi.rutas.push(response.array);
                         if (response) this.setState({ currentEventIvi });
                     });
+
+                
             }
         }
 
@@ -397,6 +510,12 @@ class MapTodo extends React.Component {
     //Change IVI mouse
     changeZoneType = (clickMapStatus) => this.setState({ clickMapStatus, customCur: 'add-' + clickMapStatus + '-zone-cur' });
 
+    //Remove Denm zone
+    removeZone = (i) => {
+        let currentEventDenm = this.state.currentEventDenm;
+        if (currentEventDenm && currentEventDenm.zones && currentEventDenm.zones[i]) currentEventDenm.zones.splice(i, 1);
+        this.setState({ currentEventDenm });
+    }
     //remove ivi detection none
     removeZoneDetection = (i) => {
         let currentEventIvi = this.state.currentEventIvi;
@@ -406,7 +525,7 @@ class MapTodo extends React.Component {
 
     //RENDER PARA LO VISUAL
     render() {
-        const { tile_map, position, zoom, ivi, currentEventIvi, visibleIvi,  usuarios, customCur } = this.state;
+        const { tile_map, position, zoom, ivi, currentEventIvi, visibleIvi, visibleDenm, usuarios, customCur, currentEventDenm, denm } = this.state;
         console.log(ivi)
         
         return (
@@ -415,7 +534,12 @@ class MapTodo extends React.Component {
                         <Link to="/login">Vuelta al login</Link>       
                     </Button>
 
-
+                <NewDenm
+                    wrappedComponentRef={this.saveFormRef}
+                    visible={visibleDenm}
+                    onCancel={this.handleCancelDenm}
+                    onCreate={this.handleCreateDenm}
+                />
                 {/*Ivi modal*/}
                 <NewIvi
                     wrappedComponentRef={this.saveFormRefIvi}
@@ -449,7 +573,7 @@ class MapTodo extends React.Component {
                         {
                             text: 'Insertar punto',
                             icon: icono,
-                            callback: (e) => this.openIviModal2(e),
+                            callback: (e) => this.openDenmModal(e),
                             hideOnSelect: true
                             
                         },'-', {
@@ -478,6 +602,17 @@ class MapTodo extends React.Component {
                         />
                     </Control>
                   
+                    {/*Panel to add zones on Ivi*/}
+                    <Control position="topright" >
+                        <PanelDenm
+                            objIvi2={currentEventDenm}
+                            visible={visibleDenm}
+                            onCreate={() => this.handleCreateDenmWithZones()}
+                            onCancel={() => this.handleCancelWithZones()}
+                            onChangeRadio={(val) => this.changeZoneType(val)}
+                            removeZoneDetection={(i) => this.removeZoneDetection(i)}
+                        />
+                    </Control>
                     <ZoomControl position="topright" />
                     <TileLayer
                         url={tile_map}
@@ -506,6 +641,18 @@ class MapTodo extends React.Component {
                         />
                     </Control>
                     {
+                        //If exist Denm to add zone
+                        currentEventDenm && <Marker
+                            position={[currentEventDenm.lat, currentEventDenm.log]}
+                            icon={L.icon({
+                                iconUrl: icono,
+                                iconSize: [35, 31],
+                                iconAnchor: [17, 27],
+                                className: "image_grey"
+                            })
+                            }></Marker>
+                    }
+                    {
                         ////If exist Ivi to add zones
                         currentEventIvi && <Marker
                             position={[currentEventIvi.lat, currentEventIvi.log]}
@@ -517,7 +664,17 @@ class MapTodo extends React.Component {
                             })
                             }></Marker>
                     }
+                    {
+                        //Zone with not added to DB
+                        currentEventDenm && currentEventDenm.zones && currentEventDenm.zones.map((zone, n) => {
+                            let obj_zone = [];
+                            zone && zone.forEach((el, i) => { obj_zone.push({ lat: el[1], lng: el[0] }) });
+                            return <Polyline key={"prov-poly-" + n} positions={obj_zone} color="#CCCCCC" weight={12} opacity={0.8} />
+                        })
+                    }
+
                       {
+                          
                         //Zone detection with not added to DB
                         currentEventIvi && currentEventIvi.rutas && currentEventIvi.rutas.map((zone, n) => {
                             let obj_zone = [];
@@ -544,7 +701,7 @@ class MapTodo extends React.Component {
                     objIvi.listaRutas.map((rutas, index) =>
                     rutas.listaPuntos.map((puntos, index2)=>
                     puntos.listaPreguntas.map((preguntas, index3)=>
-                    <MarkerIvi preguntas={preguntas}  objIvi={objIvi} rutas={rutas} puntos={puntos} key={`marker-ivi-${nombre}`} handleDelete={() => this.handleDeleteIvi(objIvi.nombre)} 
+                    <MarkerIvi preguntas={preguntas} objIvi={objIvi} rutas={rutas} puntos={puntos} key={`marker-ivi-${nombre}`} handleDelete={() => this.handleDeleteIvi(objIvi.nombre)} 
                     
                     />
                     )
@@ -556,7 +713,7 @@ class MapTodo extends React.Component {
                     
                     {
                         usuarios.map((objIvi, id_usuario) =>
-                        <MarkerUsuarios objIvi={objIvi} key={`marker-ivi2-${id_usuario}`, console.log(usuarios)} />
+                        <MarkerUsuarios objIvi={objIvi} key={`marker-ivi2-${id_usuario}`} />
                         )
                     }
 

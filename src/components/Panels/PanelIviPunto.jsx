@@ -5,7 +5,7 @@ import moment from 'moment';
 
 const { Meta } = Card;
 
-class PanelIvi2 extends React.Component {
+class PanelIviPunto extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -114,4 +114,4 @@ class PanelIvi2 extends React.Component {
 
 }
 
-export default PanelIvi2;
+export default PanelIviPunto;

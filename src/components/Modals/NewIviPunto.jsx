@@ -10,7 +10,7 @@ const { Option } = Select;
 
 const { RangePicker } = DatePicker;
 
-const IviCreateForm = Form.create({ name: 'form_ivi_in_modal' })(
+const IviCreateForm2 = Form.create({ name: 'form_ivi_in_modal2' })(
     // eslint-disable-next-line
     class extends React.Component {
 
@@ -64,13 +64,13 @@ const IviCreateForm = Form.create({ name: 'form_ivi_in_modal' })(
         }
 
         render() {
-            const { visible2, onCancel, onCreate, form } = this.props;
+            const { visible, onCancel, onCreate, form } = this.props;
             const { speed_selected } = this.state;
             const { getFieldDecorator } = form;
 
             return (
                 <Modal
-                    visible={visible2}
+                    visible={visible}
                     title={"Formulario de insercion de puntos"}
                     okText="Añadir"
                     onCancel={onCancel}
@@ -124,4 +124,4 @@ const IviCreateForm = Form.create({ name: 'form_ivi_in_modal' })(
     },
 );
 
-export default IviCreateForm;
+export default IviCreateForm2;
