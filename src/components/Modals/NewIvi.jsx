@@ -38,15 +38,7 @@ const IviCreateForm = Form.create({ name: 'form_ivi_in_modal' })(
                                     //initialValue: speed_selected,
                                     rules: [{ required: true, message: 'Introduce el nombre de la localizacion!' }],
                                 })(
-                                    <Input/>
-                                )}
-                        </Form.Item>
-                        <Form.Item label="Area de la localizacion" name="area">
-                        {getFieldDecorator('area', {
-                                    //initialValue: speed_selected,
-                                    rules: [{ required: true, message: 'Introduce el area de la localizacion!' }],
-                                })(
-                                    <Input/>
+                                    <Input placeholder="Introduce el nombre de la localizacion"/>
                                 )}
                         </Form.Item>
                         <Form.Item label="Nombre de la ruta" name="rutaNombre">
@@ -54,7 +46,7 @@ const IviCreateForm = Form.create({ name: 'form_ivi_in_modal' })(
                                     //initialValue: speed_selected,
                                     rules: [{ required: true, message: 'Introduce el nombre de la ruta!' }],
                                 })(
-                                    <Input/>
+                                    <Input placeholder="Introduce el nombre de la ruta"/>
                                 )}
                         </Form.Item>
                         <Form.Item label="Transporte" name="transporte">
@@ -62,7 +54,11 @@ const IviCreateForm = Form.create({ name: 'form_ivi_in_modal' })(
                                     //initialValue: speed_selected,
                                     rules: [{ required: true, message: 'Introduce el transporte de la ruta!' }],
                                 })(
-                                    <Input/>
+                                <Select placeholder="Selecciona el tipo de tranporte" >
+                                    <Option value="pie">A pie</Option>
+                                    <Option value="coche">Vehiculo motorizado</Option>
+                                    <Option value="bici">Bicicleta</Option>
+                                </Select>,
                                 )}
                         </Form.Item>
                         <Form.Item label="Nombre de el punto" name="puntoNombre">
@@ -70,7 +66,55 @@ const IviCreateForm = Form.create({ name: 'form_ivi_in_modal' })(
                                     //initialValue: speed_selected,
                                     rules: [{ required: true, message: 'Introduce el nombre de el punto!' }],
                                 })(
-                                    <Input/>
+                                    <Input placeholder="Introduce el nombre del punto"/>
+                                )}
+                        </Form.Item>
+
+                        <Form.Item label="Pregunta del punto" name="preguntaPunto">
+                        {getFieldDecorator('preguntaPunto', {
+                                    //initialValue: speed_selected,
+                                    rules: [{ required: true, message: 'Introduce la pregunta del punto!' }],
+                                })(
+                                    <Input placeholder="Introduce la pregunta con interrogantes"/>
+                                )}
+                        </Form.Item>
+
+                        <Form.Item label="Respuesta 1" name="respuesta1">
+                        {getFieldDecorator('respuesta1', {
+                                    //initialValue: speed_selected,
+                                    rules: [{ required: true, message: 'Introduce la respuesta del punto!' }],
+                                })(
+                                    <Input placeholder="Introduce la respuesta"/>
+                                )}
+                        </Form.Item>
+                        <Form.Item label="Respuesta 2" name="respuesta2">
+                        {getFieldDecorator('respuesta2', {
+                                    //initialValue: speed_selected,
+                                    rules: [{ required: true, message: 'Introduce la respuesta del punto!' }],
+                                })(
+                                    <Input placeholder="Introduce la respuesta"/>
+                                )}
+                        </Form.Item>
+
+                        <Form.Item label="Respuesta 3" name="respuesta3">
+                        {getFieldDecorator('respuesta3', {
+                                    //initialValue: speed_selected,
+                                    rules: [{ required: true, message: 'Introduce la respuesta del punto!' }],
+                                })(
+                                    <Input placeholder="Introduce la respuesta"/>
+                                )}
+                        </Form.Item>
+                     
+                        <Form.Item label="Respuesta Correcta" name="respuestaCorrecta">
+                        {getFieldDecorator('respuestaCorrecta', {
+                                    //initialValue: speed_selected,
+                                    rules: [{ required: true, message: 'Introduce la respuesta del punto!' }],
+                                })(
+                                <Select placeholder="Selecciona la respuesta correcta" >
+                                    <Option value="0">Respuesta 1</Option>
+                                    <Option value="1">Respuesta 2</Option>
+                                    <Option value="2">Respuesta 3</Option>
+                                </Select>,
                                 )}
                         </Form.Item>
                         

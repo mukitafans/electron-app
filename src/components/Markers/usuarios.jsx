@@ -81,7 +81,7 @@ class MarkerUsuarios extends React.Component {
                                     
                                     <Col className="col_text" span={24}>
                                     <span className="col_label">{"Ruta activa: "}</span>
-                                        {objIvi.ruta_activa && objIvi.ruta_activa.toFixed(5)}
+                                        {objIvi.ruta_activa}
                                     </Col>
                                     
                                     <Col className="col_text" span={24}>

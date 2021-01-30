@@ -68,6 +68,30 @@ class PanelIvi extends React.Component {
                             {objIvi.puntoNombre}
                             
                         </Col>
+                        <Col className="col_text" span={8}>
+                        <span className="col_label">{"Pregunta: "}</span>
+                            {objIvi.preguntaPunto}
+                            
+                        </Col>
+                        <Col className="col_text" span={8}>
+                        <span className="col_label">{"Respuesta 1: "}</span>
+                            {objIvi.respuesta1}
+                            
+                        </Col>
+                        <Col className="col_text" span={8}>
+                        <span className="col_label">{"Respuesta 2: "}</span>
+                            {objIvi.respuesta2}
+                            
+                        </Col>
+                        <Col className="col_text" span={8}>
+                        <span className="col_label">{"Respuesta3: "}</span>
+                            {objIvi.respuesta3}
+                            
+                        </Col>
+                        <Col className="col_text" span={8}>
+                        <span className="col_label">{"Respuesta Correcta: "}</span>
+                            {objIvi.respuestaCorrecta}
+                        </Col>
                         <Col className="col_text" span={12}>
                             <span className="col_label">{"Lat: "}</span>
                             {objIvi.lat && objIvi.lat.toFixed(5)}

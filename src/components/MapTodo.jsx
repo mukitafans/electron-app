@@ -32,7 +32,7 @@ import { globals } from "../variables/config.js";
 import { routingService } from '../services/routing.service.js';
 
 //Componentes
-import Chat from "./Chat.jsx";
+
 import MarkerIvi from "./Markers/Ivi.jsx";
 import NewIvi from "./Modals/NewIvi.jsx";
 import NewDenm from "./Modals/NewIviPunto.jsx";
@@ -40,15 +40,21 @@ import PanelIvi from "./Panels/PanelIvi.jsx";
 import PanelDenm from "./Panels/PanelIviPunto.jsx";
 import MarkerUsuarios from "./Markers/usuarios.jsx";
 
-const { Option } = Select;
+//CHAT
+import Chat from "./Chat/ChatRoom.jsx";
 
+
+
+//Constante option
+const { Option } = Select;
+//Radio grup constante
 const RadioGroup = Radio.Group;
 
-//Ficoba parking
+//TRAACKING PRUEBA
 const polygonZone = [[43.345991787074105, -1.7898488044738772], [43.34616928790513, -1.7897576093673708], [43.34648137601981, -1.7893901467323305], [43.34622000233296, -1.788381636142731], [43.34568164701375, -1.7886203527450564]];
 
 
-//Tiles for map
+//Capas del mapa
 const map_tiles = [
     {
         label: "Open Street Maps",
@@ -89,7 +95,7 @@ const map_tiles = [
     }
 ]
 
-//Function to select Tile
+//Seleccion de capa de mapa
 const getLabelOfTile = (value) => map_tiles.find(obj => obj.value === value).label || "Open Street Maps";
 
 
@@ -114,10 +120,10 @@ class MapTodo extends React.Component {
             currentEventDenm: null,
             currentEventIvi: null,
 
-            //traces action when click on map
+            //traces action al clickar en el mapa
             clickMapStatus: null, // null | detection | relevation | traces (for denm)
 
-            //Denm trace first point
+            //Denm trazado
             newTraceDenmStart: null,
 
             //Cursor for add traces
@@ -155,10 +161,14 @@ class MapTodo extends React.Component {
                 });
             }
         )
+       
+    }
+
+    async componentDidUpdate(){
         await fetch('http://137.116.219.96:80/usuarios/all')
         .then(response2 => response2.json())
         .then(
-        (res2) => { console.log({usuarios: res2})
+        (res2) => { 
         this.setState({ usuarios: res2 });
         },
         (error) => {
@@ -280,8 +290,11 @@ class MapTodo extends React.Component {
                 body: JSON.stringify({
                         "nombre":currentEventIvi.localizacion, "area":0,
                         "listaRutas":[{"nombre":currentEventIvi.rutaNombre, "transporte":currentEventIvi.transporte,"km_totales":5, "tiempo":"5000",
-                        "listaPuntos":[{"nombre":currentEventIvi.puntoNombre, "lat":currentEventIvi.lat, "log":currentEventIvi.log, "tipo":"prueba", "oculto": true, "area_total":1000, "ruta": JSON.stringify(currentEventIvi.rutas) ,"listaPreguntas":[{"pregunta":'¿unajeje?', "puntuacion_pregunta":20,  "listaRespuestas":[]}]},
-                                        {"nombre":'puntoPrueba2', "lat":"46.73979", "log":"-1.78863", "tipo":"prueba", "oculto": true, "area_total":1000, "listaPreguntas":[{"pregunta":'¿unajeje?', "puntuacion_pregunta":20,  "listaRespuestas":[]}]}]}
+                        "listaPuntos":[{"nombre":currentEventIvi.puntoNombre, "lat":currentEventIvi.lat, "log":currentEventIvi.log, 
+                        "tipo":"prueba", "oculto": true, "area_total":1000, "ruta": JSON.stringify(currentEventIvi.rutas) ,
+                        "listaPreguntas":[{"pregunta":currentEventIvi.preguntaPunto, "puntuacion_pregunta":20, "respuesta_correcta":currentEventIvi.respuestaCorrecta, 
+                        "listaRespuestas":[currentEventIvi.respuesta1, currentEventIvi.respuesta2, currentEventIvi.respuesta3]}]},
+                                        ]}
                                     ],
                         })
                 
@@ -319,26 +332,24 @@ class MapTodo extends React.Component {
 
             //If not require traces, send request
             if (!values.traces) {
-              console.log("SIN TRAZAS, ACTIVA EL CURSOS")
+              console.log("SIN TRAZAS, ERROR")
             } else {
                 //To get traces
                 console.log(values.rutaNombre.value)
                 this.setState({
                     currentEventDenm: {
-                       // cause_code: denm_cause_code,
-                       // relevance_distance: values.relevanceDistance,
-                       // relevance_traffic_direction: values.relevanceTrafficDirection,
-                       /* subcause_code: values.subCauseCode,
-                       spm: values.speed_limit,
-                       localizacion: values.localizacion,
-                       area: values.area,
-                       rutaNombre: values.rutaNombre,
-                       transporte: values.transporte,
-                       puntoNombre: values.puntoNombre,*/
+                    
                         localizacion: values.localizacion.value,
                         rutaNombre: values.rutaNombre.value,
                         transporte: values.transporte,
                         puntoNombre: values.puntoNombre,
+
+                        preguntaPunto: values.preguntaPunto,
+                        respuesta1: values.respuesta1,
+                        respuesta2: values.respuesta2,
+                        respuesta3: values.respuesta3,
+                        respuestaCorrecta: values.respuestaCorrecta,
+
                         lat: latLonClick.lat,
                         log: latLonClick.lng,
                         rutas: []
@@ -379,14 +390,14 @@ class MapTodo extends React.Component {
                         "ruta": null,
                         "listaPreguntas": [
                             {
-                                "pregunta": "Quien tres",
+                                "pregunta": currentEventDenm.preguntaPunto,
                                 "listaRespuestas": [
-                                    "DAbiz El tonto",
-                                    "Torron el Tonto",
-                                    "Iker Martinez Dios Supremo"
+                                    currentEventDenm.respuesta1,
+                                    currentEventDenm.respuesta2,
+                                    currentEventDenm.respuesta3
                                 ],
-                                "respuesta_correcta": null,
-                                "puntuacion_pregunta": 8
+                                "respuesta_correcta": 1,
+                                "puntuacion_pregunta": 20
                             }
                         ]
                     })
@@ -448,6 +459,13 @@ class MapTodo extends React.Component {
                         rutaNombre: values.rutaNombre,
                         transporte: values.transporte,
                         puntoNombre: values.puntoNombre,
+
+                        preguntaPunto: values.preguntaPunto,
+                        respuesta1: values.respuesta1,
+                        respuesta2: values.respuesta2,
+                        respuesta3: values.respuesta3,
+                        respuesta1: values.respuesta2,
+                        respuestaCorrecta: values.respuestaCorrecta,
                         
                         lat: latLonClick.lat,
                         log: latLonClick.lng,
@@ -526,13 +544,11 @@ class MapTodo extends React.Component {
     //RENDER PARA LO VISUAL
     render() {
         const { tile_map, position, zoom, ivi, currentEventIvi, visibleIvi, visibleDenm, usuarios, customCur, currentEventDenm, denm } = this.state;
-        console.log(ivi)
+        //console.log(ivi)
         
         return (
             <Col span={24} style={{ padding: 0 }}>
-                <Button style={{padding:'0px'}} type="primary" block>
-                        <Link to="/login">Vuelta al login</Link>       
-                    </Button>
+                
 
                 <NewDenm
                     wrappedComponentRef={this.saveFormRef}
@@ -691,10 +707,7 @@ class MapTodo extends React.Component {
                             return <Polyline key={"ivi-poly-relevance-" + n} positions={obj_zone} color="#CCCCCC" weight={12} opacity={0.8} />
                         })
                     }
-                    {/**     <Control>
-                        <Chat>
-                        </Chat>
-                    </Control>*/}
+                  
                 
                    
                     {ivi.map((objIvi, nombre) => 
@@ -717,6 +730,9 @@ class MapTodo extends React.Component {
                         )
                     }
 
+                    <Control position="topright">
+                      <Chat></Chat>
+                    </Control>
                     </Map>
             </Col>
         );

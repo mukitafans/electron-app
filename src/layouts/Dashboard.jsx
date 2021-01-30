@@ -151,7 +151,7 @@ class Dashboard extends Component {
                 {/*<Footer style={{ textAlign: 'center' }}>C-Mobile ©2019 Created by CEIT</Footer>*/}
             </Layout>
                 <Content>
-                    <div style={{ background: '#e3e3e3', minHeight: "calc(100vh - 71px)" }}>
+                    <div style={{ background: '#ffffff', minHeight: "calc(100vh - 71px)" }}>
                         {/*<Map />*/}
                         <Switch>
                             {routes.map((route, index) => (

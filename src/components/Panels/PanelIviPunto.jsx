@@ -54,15 +54,11 @@ class PanelIviPunto extends React.Component {
                             
                         </Col>
                         <Col className="col_text" span={8}>
-                        <span className="col_label">{"Transporte: "}</span>
-                            {objIvi2.transporte}
-                            
-                        </Col>
-                        <Col className="col_text" span={8}>
                         <span className="col_label">{"Nombre punto: "}</span>
                             {objIvi2.puntoNombre}
                             
                         </Col>
+                       
                         <Col className="col_text" span={12}>
                             <span className="col_label">{"Lat: "}</span>
                             {objIvi2.lat && objIvi2.lat.toFixed(5)}
@@ -76,27 +72,34 @@ class PanelIviPunto extends React.Component {
                     <Row gutter={[16, 16]}>
                         <Col className="col_text" span={24}>
                             <div style={{ marginTop: 16 }}>
-                                <Radio.Group defaultValue="detection" size="small" style={{ display: "block" }} onChange={(val) => this.props.onChangeRadio(val.target.value)}>
-                                    <Radio.Button value="detection">Rutas</Radio.Button>
-                                   {/*NOTAS
-                                   <Radio.Button value="relevance">Relevance</Radio.Button>
-                                   */} 
-                                </Radio.Group>
+                                <h4>Preguntas del punto</h4>
                             </div>
                         </Col>
                     </Row>
-                    <Row gutter={[16, 16]}>
-                        <Col className="col_text" span={24}>
-                            <List
-                                size="small"
-                                header={<div>Rutas</div>}
-                                bordered
-                                dataSource={objIvi2.rutas}
-                                renderItem={(_, i) => <List.Item actions={[<span key={"list-zone-det-delete" + i}><Icon type="delete" onClick={() => this.props.removeZoneDetection(i)} style={{ fontSize: '16px', color: '#ff7875' }} /></span>]}>{"Zone detection " + (i + 1)}</List.Item>}
-                            />
+                    <Col className="col_text" span={8}>
+                        <span className="col_label">{"Pregunta: "}</span>
+                            {objIvi2.preguntaPunto}
+                            
                         </Col>
-                       
-                    </Row>
+                        <Col className="col_text" span={8}>
+                        <span className="col_label">{"Respuesta 1: "}</span>
+                            {objIvi2.respuesta1}
+                            
+                        </Col>
+                        <Col className="col_text" span={8}>
+                        <span className="col_label">{"Respuesta 2: "}</span>
+                            {objIvi2.respuesta2}
+                            
+                        </Col>
+                        <Col className="col_text" span={8}>
+                        <span className="col_label">{"Respuesta3: "}</span>
+                            {objIvi2.respuesta3}
+                            
+                        </Col>
+                        <Col className="col_text" span={8}>
+                        <span className="col_label">{"Respuesta Correcta: "}</span>
+                            {objIvi2.respuestaCorrecta}
+                        </Col>
                     <Divider />
                     <Row gutter={[16, 16]}>
                         <Col className="col_text" span={16}>

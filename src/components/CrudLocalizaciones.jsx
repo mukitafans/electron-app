@@ -1,211 +1,112 @@
 import React, { Component } from 'react';
-
+import { Container, Row, Col } from 'reactstrap';
+import ModalForm from '../components/Modals/Modal.js';
+import DataTable from '../components/Tables/DataTable';
+import { CSVLink } from "react-csv";
 import Map from '../views/Map.jsx';
 //import logoCmobile from './../../assets/img/c_mobile.png';
 import logo from '../assets/img/logo.png';
 import menuIcon from '../assets/img/Menuicon.png';
 import { Location, redirectTo } from '@reach/router'
 import { Redirect, Link } from 'react-router-dom';
-
-import { Layout, Menu, Button, Drawer, Table, Badge, Dropdown, Icon } from 'antd';
+import { Button } from 'reactstrap';
+import { Layout, Menu, Drawer, Table, Badge, Dropdown, Icon, Collapse } from 'antd';
 
 import { authenticationService } from '../services/authentication.service.js';
 import reqwest from 'reqwest';
-//import ReactNestedTable from 'react-nested-table';
 
-
-
-//const data = [{"id":"1", "nombre":"Irun","area":0.0,"listaRutas":[{"nombre":"Ruta1","transporte":"Piernas","tiempo":2892,"km_totales":1,"listaPuntos":[{"nombre":"Behobia","lat":43.34228621776414,"log":-1.7603850690135165,"area_total":132,"oculto":true,"tipo":"0","ruta":null,"listaPreguntas":[{"pregunta":"Quien es mas guapo de los tres","listaRespuestas":["DAbiz El tonto","Torron el zorrrroooooo","Iker Martinez Dios Supremo"],"respuesta_correcta":"2","puntuacion_pregunta":12}]}]},{"nombre":"Ruta 2","transporte":"nadando","tiempo":12,"km_totales":11,"listaPuntos":[{"nombre":"Olaberria","lat":43.32996446957748,"log":-1.78845516017538,"area_total":132,"oculto":true,"tipo":"2","ruta":null,"listaPreguntas":[{"pregunta":"Quien es mas guapo de los tres","listaRespuestas":["DAbiz El tonto","Torron el Torron","Iker Martinez Dios Supremo"],"respuesta_correcta":"2","puntuacion_pregunta":12}]}]}]},{"id":"2","nombre":"Hondarribia","area":0.0,"listaRutas":[{"nombre":"Ruta 3","transporte":"Piernas","tiempo":2892,"km_totales":1,"listaPuntos":[{"nombre":"Puerto","lat":43.38875433767975,"log":-1.7905649167319726,"area_total":132,"oculto":true,"tipo":"Pruebas","ruta":null,"listaPreguntas":[{"pregunta":"Quien es mas guapo de los tres","listaRespuestas":["DAbiz El tonto","Torron el zorrrroooooo","Iker Martinez Dios Supremo"],"respuesta_correcta":null,"puntuacion_pregunta":12}]},{"nombre":"Playa","lat":43.38066450417254,"log":-1.798228292332793,"area_total":132,"oculto":true,"tipo":"Pruebas","ruta":null,"listaPreguntas":[{"pregunta":"Quien tres","listaRespuestas":["DAbiz El tonto","Torron el Tonto","Iker Martinez Dios Supremo"],"respuesta_correcta":null,"puntuacion_pregunta":8}]}]},{"nombre":"Ruta 4","transporte":"nadando","tiempo":12,"km_totales":11,"listaPuntos":[{"nombre":"Golf","lat":43.33773609026295,"log":-1.8265911234099834,"area_total":132,"oculto":true,"tipo":"Pruebas","ruta":null,"listaPreguntas":[{"pregunta":"Quien es mas guapo de los tres","listaRespuestas":["DAbiz El tonto","Torron el Torron","Iker Martinez Dios Supremo"],"respuesta_correcta":null,"puntuacion_pregunta":12}]}]}]}]
-
-//LISTA PREGUNTAS SI ESTA NULL PETA
 
 class CrudLocalizaciones extends Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-            //logged: true,
-            //visible: false
-            data: [],
-            courses: [],
-            message: null
-        };
-        this.deleteCourseClicked = this.deleteCourseClicked.bind(this)
-        this.updateCourseClicked = this.updateCourseClicked.bind(this)
-        this.addCourseClicked = this.addCourseClicked.bind(this)
-        this.refreshCourses = this.refreshCourses.bind(this)
-    }
-    async componentDidMount() {
-
-        await fetch('http://137.116.219.96:80/localizaciones/all')
-        .then(response => response.json())
-        .then(
-        (res) => { console.log({data: res})
-        this.setState({ data: res });
-        },
-        (error) => {
-            this.setState({
-              
-              error
-            });
-        }
-    )
-        
-        
-       
-    }
-
-    refreshCourses() {
-        /*CourseDataService.retrieveAllCourses(INSTRUCTOR)//HARDCODED
-            .then(
-                response => {
-                    //console.log(response);
-                    this.setState({ courses: response.data })
-                }
-            )*/
-
-        fetch = (data = {}) => {
-            console.log('datos:', data);
-            this.setState({ loading: true });
-            reqwest({
-                url: 'http://137.116.219.96:80/localizaciones/all',
-                method: 'get',
-                data: {
-                [{}]: 20,
-                ...data,
-                },
-                type: 'json',
-            }).then(data => {
-                const pagination = { ...this.state.pagination };
-                // Read total count from server
-                // pagination.total = data.totalCount;
-                pagination.total = 200;
-                console.log(data);
-                this.setState({
-                loading: false,
-                data: data,
-                pagination,
-                });
-            });
-        };
-    }
-    deleteCourseClicked(id) {
-        /*CourseDataService.deleteCourse(INSTRUCTOR, id)
-            .then(
-                response => {
-                    this.setState({ message: `Delete of course ${id} Successful` })
-                    this.refreshCourses()
-                }
-            )*/
-        console.log("AHAHAHAAHAHA NO FUNSIONA CRACK FALTA LO DE LA API Y SE BORRA AJAJAJ SALU2")
-    }
-    addCourseClicked() {
-       this.props.history.push(`/courses/-1`)
-       console.log("agregar?")
-    }
-
-    updateCourseClicked(id) {
-        console.log('SE INTENTA UPDATEAR PERO FALTAN WEAS DE LA API ' + id)
-        this.props.history.push(`/courses/${id}`)
-    }
-
-
-    render(){
-        if (this.state.error) {
-            return <h1>Caught an error.</h1>
-          }
-        return <div> 
-                       
-
-        {/*
-        data.map((item, index)=>{
-        return(<div>
-            <h1>{item.nombre}</h1>
-            {item.listaRutas.map((c, i)=> <div> 
-                <h3>{c.nombre}</h3>
-                {console.log(c)}
-                {c.listaPuntos.map((punto, x) => <div>
-                    <h5>{punto.nombre}</h5>
-                    <h5>{punto.lat}</h5>
-                    <h5>{punto.log}</h5>
-                    {console.log(punto)}
-                 
-                    {punto.listaPreguntas.map((preg, y) => <div>
-                        <h5>{preg.pregunta}</h5> 
-                    </div>)}
-                 
-
-                </div>)}
-
-            </div>)}
-        </div>
-        )
-    })
-    */
-}
-
-        <div className="container">
-        <h3>Lista de rutas</h3>
-        {this.state.message && <div class="alert alert-success">{this.state.message}</div>}
-        <div className="container">
-            <table className="table" >
-                <thead>
-                    <tr>
-                        <th>Localizacion</th>
-                        <th>Area</th>
-                        <th>Lista de Rutas</th>
-                        
-                        <th>Update</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.state.data.map(
-                            course =>
-                            
-                                <tr key={course.nombre}>
-                                    <td>{course.nombre}</td>
-                                    <td>{course.area}</td>
-                                    {course.listaRutas.map((item, index1) => 
-                                    
-                                    <tr key={index1}>
-                                        
-                                        <th>nombre de la ruta<td style={{color:'red'}}>{item.nombre}</td></th>
-                                        
-                                        <th>Transporte<td style={{color:'red'}}>{item.transporte}</td></th>
-                                       
-                                        <th>Tiempo<td style={{color:'red'}}>{item.tiempo}</td></th>
-                                        
-                                        <th>km totales<td style={{color:'red'}}>{item.km_totales}</td></th>
-                                        
-                                                                                
-                                        {item.listaPuntos.map((punto, index2) =>
-                                        
-                                        <div key={index2}>  
-                                            <th>Nombre del punto<td style={{color:'red'}}>{punto.nombre}</td></th>
-                                            <th>Latidud<td style={{color:'red'}}>{punto.lat}</td></th>
-                                            <th>Longitud<td style={{color:'red'}}>{punto.log}</td></th>
-                                        </div>    
-                                        
-                                        )}
-                                    </tr>
-                                    )}
-                                    
-                                    <td><button className="btn btn-success" onClick={() => this.updateCourseClicked(course.nombre)}>Update</button></td>
-                                    <td><button className="btn btn-warning" onClick={() => this.deleteCourseClicked(course.nombre)}>Delete</button></td>
-                                </tr> 
-                        )
-                    }
-                </tbody>
-            </table>
-            <div className="row">
-                <button className="btn btn-success" onClick={this.addCourseClicked}>Add</button>
-            </div>
-        </div>
-    </div>
-  </div>
+    state = {
+        items: []
+      }
     
+      async getItems(){
+        await fetch('http://137.116.219.96:80/localizaciones/all')
+          .then(response => response.json())
+          .then(items => this.setState({items}))
+          .catch(err => console.log(err))
+      }
+    
+      deleteItem = nombre => {
+        let confirmDelete = window.confirm('Delete item forever?')
+        if(confirmDelete){
+          fetch(`http://137.116.219.96:80/localizaciones/eliminarLocalizacion/${nombre}`, {
+          method: 'delete',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            nombre
+          })
+        })
+          .then(response => response.json())
+          .then(item => {
+            this.props.deleteItemFromState(nombre)
+          })
+          .catch(err => console.log(err))
+        }
+    
+      }
+      addItemToState = (item) => {
+        this.setState(prevState => ({
+          items: [...prevState.items, item]
+        }))
+      }
+    
+      updateState = (item) => {
+        const itemIndex = this.state.items.findIndex(data => data.id === item.id)
+        const newArray = [
+        // destructure all items from beginning to the indexed item
+          ...this.state.items.slice(0, itemIndex),
+        // add the updated item to the array
+          item,
+        // add the rest of the items to the array from the index after the replaced item
+          ...this.state.items.slice(itemIndex + 1)
+        ]
+        this.setState({ items: newArray })
+      }
+    
+      deleteItemFromState = (id) => {
+        const updatedItems = this.state.items.filter(item => item.id !== id)
+        this.setState({ items: updatedItems })
+      }
+    
+      componentDidMount(){
+        this.getItems()
+      }
+    
+      render() {
+        return (
+          <Container className="App">
+            <Row>
+              <Col>
+                <h1 style={{margin: "20px 0"}}>Localizaciones</h1>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <DataTable items={this.state.items} updateState={this.updateState} deleteItemFromState={this.deleteItemFromState} />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <CSVLink
+                  filename={"db.csv"}
+                  color="primary"
+                  style={{float: "left", marginRight: "10px"}}
+                  className="btn btn-primary"
+                  data={this.state.items}>
+                  Descargar CSV
+                </CSVLink>
+                
+              </Col>
+            </Row>
+          </Container>
+        )
+      }
     }
 
-}
+    
 
 export default CrudLocalizaciones;

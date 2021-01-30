@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Modal, Form, DatePicker, Switch, Input } from 'antd';
+import { Modal, Form, DatePicker, Switch, Input, Select as seleccion } from 'antd';
 
 import moment from "moment"; //For use dates
 import Select from 'react-select';
@@ -57,6 +57,7 @@ const IviCreateForm2 = Form.create({ name: 'form_ivi_in_modal2' })(
             this.setState({selectOptions2: options})
     
         }
+        
        
         handleChange(e){
             console.log(e)
@@ -93,23 +94,57 @@ const IviCreateForm2 = Form.create({ name: 'form_ivi_in_modal2' })(
                                     <Select options={this.state.selectOptions2} onChange={(e) =>{ this.getOptions2(this)}, this.handleChange.bind(this) } />
                                 )}
                         </Form.Item>
-                        <Form.Item label="Transporte" name="transporte">
-                        {getFieldDecorator('transporte', {
-                                    //initialValue: speed_selected,
-                                    rules: [{ required: true, message: 'Introduce el transporte de la ruta!' }],
-                                })(
-                                    <Input/>
-                                )}
-                        </Form.Item>
                         <Form.Item label="Nombre de el punto" name="puntoNombre">
                         {getFieldDecorator('puntoNombre', {
                                     //initialValue: speed_selected,
                                     rules: [{ required: true, message: 'Introduce el nombre de el punto!' }],
                                 })(
-                                    <Input/>
+                                    <Input placeholder="Introduce el nombre de el punto"/>
                                 )}
                         </Form.Item>
-                        
+                        <Form.Item label="Pregunta del punto" name="preguntaPunto">
+                        {getFieldDecorator('preguntaPunto', {
+                                    //initialValue: speed_selected,
+                                    rules: [{ required: true, message: 'Introduce la pregunta del punto!' }],
+                                })(
+                                    <Input placeholder="Introduce la pregunta con interrogantes"/>
+                                )}
+                        </Form.Item>
+
+                        <Form.Item label="Respuesta 1" name="respuesta1">
+                        {getFieldDecorator('respuesta1', {
+                                    //initialValue: speed_selected,
+                                    rules: [{ required: true, message: 'Introduce la respuesta del punto!' }],
+                                })(
+                                    <Input placeholder="Introduce la respuesta"/>
+                                )}
+                        </Form.Item>
+                        <Form.Item label="Respuesta 2" name="respuesta2">
+                        {getFieldDecorator('respuesta2', {
+                                    //initialValue: speed_selected,
+                                    rules: [{ required: true, message: 'Introduce la respuesta del punto!' }],
+                                })(
+                                    <Input placeholder="Introduce la respuesta"/>
+                                )}
+                        </Form.Item>
+
+                        <Form.Item label="Respuesta 3" name="respuesta3">
+                        {getFieldDecorator('respuesta3', {
+                                    //initialValue: speed_selected,
+                                    rules: [{ required: true, message: 'Introduce la respuesta del punto!' }],
+                                })(
+                                    <Input placeholder="Introduce la respuesta"/>
+                                )}
+                        </Form.Item>
+                     
+                        <Form.Item label="Respuesta Correcta" name="respuestaCorrecta">
+                        {getFieldDecorator('respuestaCorrecta', {
+                                    //initialValue: speed_selected,
+                                    rules: [{ required: true, message: 'Introduce la respuesta del punto!' }],
+                                })(
+                                    <Input placeholder="Introduce el transporte (0,1,2)" />
+                                )}
+                        </Form.Item>
 
                         <Form.Item label="Añadir ruta?" className="collection-create-form_last-form-item">
                             {getFieldDecorator('traces', { valuePropName: "checked", initialValue: true })(
