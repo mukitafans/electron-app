@@ -25,8 +25,6 @@ const App = () => (
         <Route path="/login" component={Login} />
         
         <Route path="/localizaciones" component={localizaciones} />
-        <Route path="/preguntas" component={preguntas} />
-        <Route path="/ranking" component={ranking} />
         <Route path="/usuarios" component={usuarios} />
       </Switch>
     </BrowserRouter>

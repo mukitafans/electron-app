@@ -92,20 +92,12 @@ class MarkerIvi extends React.Component {
                                         <Avatar size={50} shape="square" src={subimage} />
                                     }
                                     title={title}
-                                    //description={moment(parseInt(objIvi.timestamp) * 1000).format("YYYY/MM/DD HH:mm:ss")}
+                                  
                                 />
                                 <Divider />
                                 {/* Show data */}
                                 <Row gutter={[16, 8]}>
-                                    {/*
-                                    <Col className="col_text" span={24}>
-                                        <span className="col_label">{"Valid from: "}</span>
-                                        {moment(parseInt(objIvi.valid_from) * 1000).format("YYYY/MM/DD HH:mm:ss")}
-                                    </Col>
-                                    <Col className="col_text" span={24}>
-                                        <span className="col_label">{"Valid to: "}</span>
-                                        {moment(parseInt(objIvi.valid_to) * 1000).format("YYYY/MM/DD HH:mm:ss")}
-                                    </Col>*/}
+                                
                                     <Col className="col_text" span={24}>
                                         <span className="col_label">{"Localizacion: "}</span>
                                         {objIvi.nombre}

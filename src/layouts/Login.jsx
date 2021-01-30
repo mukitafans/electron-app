@@ -93,10 +93,8 @@ class Login extends Component {
                 {this.state.redirect ? <Redirect to='/' /> :
                     <Layout className="layout" style={{ minHeight: '100vh', background: '#fff' }}>
                         <Header style={{ background: '#33A8FF', padding: 0 }} >
-                            <h1>LOGIN TOPE DE WAPO</h1>
-                            <Button style={{padding:'0px'}} type="primary" block>
-                        <Link to="/todo">Lista de rutas</Link>       
-                    </Button>
+                            <h1>IDI Maps</h1>
+                            
                         </Header>
                         <Content>
                             <Row style={{ background: '#fff', minHeight: "calc(100vh - 140px)" }} type="flex" justify="space-around" align="middle">

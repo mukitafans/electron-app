@@ -378,7 +378,6 @@ class MapTodo extends React.Component {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
             },
-            //{"0":"una", "1":"dos", "2":"tres"} 'JAJAJA', 'JOJOJO', 'JUJUJU' "respuesta_correcta":'1'
             body: JSON.stringify({
                 
                         "nombre": currentEventDenm.puntoNombre,
@@ -541,7 +540,7 @@ class MapTodo extends React.Component {
         this.setState({ currentEventIvi });
     }
 
-    //RENDER PARA LO VISUAL
+    //RENDER elementos visuales
     render() {
         const { tile_map, position, zoom, ivi, currentEventIvi, visibleIvi, visibleDenm, usuarios, customCur, currentEventDenm, denm } = this.state;
         //console.log(ivi)
@@ -635,7 +634,7 @@ class MapTodo extends React.Component {
                         attribution={map_tiles[1].value === tile_map ? map_tiles[1].attribution : "&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"}
                     />
 
-                    {/*To select map tiles*/}
+                    {/*Seleccion de capa de mapa*/}
                     <Control position="bottomleft" style={{position: 'fixed', marginLeft:'49%'}}>
                         <Select size="small" defaultValue={getLabelOfTile(tile_map)} onChange={this.handleChangeTile}>
                             {map_tiles.map((obj, i) => <Option key={"map_tile_" + i} value={obj.value}>{obj.label}</Option>)}
@@ -650,14 +649,13 @@ class MapTodo extends React.Component {
                                 getCurrentPosition
                             }) => {
                                 if (latitude && longitude && position[0] !== latitude && position[1] !== longitude) this.setState({ position: [latitude, longitude] })
-                                //this.map.setView(new L.LatLng(40.737, -73.923), 8);
                                 return <Button shape="circle" ghost onClick={() => getCurrentPosition()} ><FontAwesomeIcon icon={faMapMarkerAlt} /></Button>
                             }
                             }
                         />
                     </Control>
                     {
-                        //If exist Denm to add zone
+                        //Iconos localizaciones
                         currentEventDenm && <Marker
                             position={[currentEventDenm.lat, currentEventDenm.log]}
                             icon={L.icon({
@@ -669,7 +667,7 @@ class MapTodo extends React.Component {
                             }></Marker>
                     }
                     {
-                        ////If exist Ivi to add zones
+                        ////Iconos rutas
                         currentEventIvi && <Marker
                             position={[currentEventIvi.lat, currentEventIvi.log]}
                             icon={L.icon({
@@ -681,7 +679,7 @@ class MapTodo extends React.Component {
                             }></Marker>
                     }
                     {
-                        //Zone with not added to DB
+                        //ICONOS PUNTO
                         currentEventDenm && currentEventDenm.zones && currentEventDenm.zones.map((zone, n) => {
                             let obj_zone = [];
                             zone && zone.forEach((el, i) => { obj_zone.push({ lat: el[1], lng: el[0] }) });
@@ -691,7 +689,7 @@ class MapTodo extends React.Component {
 
                       {
                           
-                        //Zone detection with not added to DB
+                        //DIBUJADO DE RUTAS
                         currentEventIvi && currentEventIvi.rutas && currentEventIvi.rutas.map((zone, n) => {
                             let obj_zone = [];
                             zone && zone.forEach((el, i) => { obj_zone.push({ lat: el[1], lng: el[0] }) });
@@ -700,7 +698,7 @@ class MapTodo extends React.Component {
                     }
 
                     {
-                        //Zone relevance with not added to DB
+                        //DIBUJADO DE RUTAS2
                         currentEventIvi && currentEventIvi.relevance_zones && currentEventIvi.relevance_zones.map((zone, n) => {
                             let obj_zone = [];
                             zone && zone.forEach((el, i) => { obj_zone.push({ lat: el[1], log: el[0] }) });
@@ -709,7 +707,7 @@ class MapTodo extends React.Component {
                     }
                   
                 
-                   
+                    {/* MAPEO DE LOS PUNTOS */}
                     {ivi.map((objIvi, nombre) => 
                     objIvi.listaRutas.map((rutas, index) =>
                     rutas.listaPuntos.map((puntos, index2)=>
@@ -717,12 +715,7 @@ class MapTodo extends React.Component {
                     <MarkerIvi preguntas={preguntas} objIvi={objIvi} rutas={rutas} puntos={puntos} key={`marker-ivi-${nombre}`} handleDelete={() => this.handleDeleteIvi(objIvi.nombre)} 
                     
                     />
-                    )
-                   
-                    )
-                    )
-                   
-                    )}
+                    ))))}
                     
                     {
                         usuarios.map((objIvi, id_usuario) =>

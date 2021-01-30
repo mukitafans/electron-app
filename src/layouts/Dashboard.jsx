@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import Map from '../views/Map.jsx';
 import Localizaciones from '../components/CrudLocalizaciones.jsx';
-import Preguntas from '../components/CrudPreguntas.jsx';
+import Usuarios from '../components/CrudUsuarios.jsx';
 
 import Login from './Login.jsx';
 //import logoCmobile from './../../assets/img/c_mobile.png';
@@ -33,8 +33,8 @@ const routes = [
         main: () => <Localizaciones/>
     },
     {
-        path: "/preguntas",
-        main: () => <Preguntas/>
+        path: "/usuarios",
+        main: () => <Usuarios/>
     }
     
   ];
@@ -66,8 +66,11 @@ class Dashboard extends Component {
     signOut = () => {
         localStorage.removeItem("token");
         this.setState({
-          islogout: true
+          logged: true
         });
+        if (!this.state.logged) {
+            return <Redirect to='/login' />
+        }
       };
 
 
@@ -76,6 +79,7 @@ class Dashboard extends Component {
         this.setState({
           visible: true,
         });
+      
       };
     
       onClose = () => {
@@ -102,20 +106,18 @@ class Dashboard extends Component {
                     visible={this.state.visible}
                     >
                         <Button style={{padding:'0px'}} type="primary" block>
-                            <Link to="/login">login pruebas</Link>       
+                            <Link to="/login">Prueba login</Link>       
                         </Button>
-                        <Button style={{padding:'0px'}} type="primary" block>
+                        <Button style={{marginTop:'10px'}} type="primary" block>
                             <Link to="/">Mapa de rutas</Link>       
                         </Button>
                         <Button style={{marginTop:'10px'}} type="primary" block>
-                            <Link to="/localizaciones">Lista de rutas</Link>       
+                            <Link to="/localizaciones">Gestion de rutas</Link>       
                         </Button>
                         <Button style={{marginTop:'10px'}}  type="primary" block>
-                            <Link to="/usuarios">Perfiles de usuario</Link>                    
+                            <Link to="/usuarios">Gestion de usuarios</Link>                    
                         </Button>
-                        <Button style={{marginTop:'10px'}} type="primary" block>
-                            <Link to="/preguntas">Preguntas de las rutas</Link>                    
-                        </Button>
+                    
                         <Button style={{marginTop:'10px'}} type="danger" block onClick={this.signOut}>
                         Logout
                         </Button>

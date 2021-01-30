@@ -3,17 +3,8 @@ import { Container, Row, Col } from 'reactstrap';
 import ModalForm from '../components/Modals/Modal.js';
 import DataTable from '../components/Tables/DataTable';
 import { CSVLink } from "react-csv";
-import Map from '../views/Map.jsx';
-//import logoCmobile from './../../assets/img/c_mobile.png';
-import logo from '../assets/img/logo.png';
-import menuIcon from '../assets/img/Menuicon.png';
-import { Location, redirectTo } from '@reach/router'
-import { Redirect, Link } from 'react-router-dom';
-import { Button } from 'reactstrap';
-import { Layout, Menu, Drawer, Table, Badge, Dropdown, Icon, Collapse } from 'antd';
 
-import { authenticationService } from '../services/authentication.service.js';
-import reqwest from 'reqwest';
+
 
 
 class CrudLocalizaciones extends Component{
