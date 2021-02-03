@@ -18,7 +18,7 @@ const ChatRoom = () => {
   };
   const { messages, sendMessage } = useChat(salaChat);
   const [newMessage, setNewMessage] = React.useState("");
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
   const handleNewMessageChange = (event) => {
   
     setNewMessage(event.target.value);
@@ -28,7 +28,7 @@ const ChatRoom = () => {
   const handleSendMessage = () => {
     sendMessage(newMessage);
     //HACE BIEN
-    console.log(newMessage);
+    //console.log(newMessage +" Enviar Mensaje");
     setNewMessage("");
     
   };
@@ -51,9 +51,9 @@ const ChatRoom = () => {
     }, [])
     React.useEffect(() => {
         fetchData()
-    }, [fetchData,messages])
+    }, [fetchData])
 
-    const cambiarDatos = () =>{
+  const cambiarDatos = () =>{
      
      
     if(Contador >= responseData.length){
@@ -76,32 +76,35 @@ const ChatRoom = () => {
           setShow(!show);
         }}
       >
-        {show ? 'Ocultar Chat' : 'Mostrar Chat'}
+        {show ? 'Mostrar Chat' : 'Ocultar Chat'}
       </button>
       {show ? (
           <div className="chat-room-container">
           <h1 className="room-name">Room: {salaChat}</h1>
           <div className="messages-container">
             <ol className="messages-list">
-              {messages.map((message, i) => {
-                
-                 if(message.roomId === salaChat){
-                  {console.log(message.roomId)}
-                  {console.log(message.body)}
-                  
+              {messages.map((message, i) => (
+
+                message.roomId == salaChat ? 
                   <li
-                    key={i}
-                    className={`message-item ${
-                      message.ownedByCurrentUser ? "my-message" : "received-message"
-                    }`}
-                    
-                  >
-                    <h1>{message.body.value}</h1>
-                  </li>
-                 }
+                  key={i}
+                  className={`message-item ${
+                    message.ownedByCurrentUser ? "my-message" : "received-message"
+                  }`}
+                >
+                  {message.body}
+                </li>
+                : <li  key={i}></li>
+              
+                
+            
+                 
                 
 
-              })}
+              ))}
+              {/*
+              console.log(messages)*/
+              }
                
             </ol>
           </div>
@@ -132,4 +135,3 @@ const ChatRoom = () => {
 };
 
 export default ChatRoom;
-
